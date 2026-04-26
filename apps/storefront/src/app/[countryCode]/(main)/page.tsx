@@ -2,6 +2,7 @@ import { Metadata } from "next"
 
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
+import CarouselRail from "@modules/common/components/carousel-rail"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ProductPreview from "@modules/products/components/product-preview"
 import { listCollections } from "@lib/data/collections"
@@ -136,7 +137,7 @@ export default async function Home(props: {
 
       <section className="bg-white">
         {latestProducts?.length > 0 && (
-          <div className="content-container border-t border-[#111111]/10 py-14 small:py-24">
+          <div className="content-container border-t border-[#111111]/10 py-12 small:py-24">
             <div className="mb-8 flex items-end justify-between gap-6">
               <div>
                 <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
@@ -153,17 +154,20 @@ export default async function Home(props: {
                 View all
               </LocalizedClientLink>
             </div>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-12 small:grid-cols-4 small:gap-x-5 small:gap-y-16">
+            <CarouselRail className="-mx-6 px-6 small:mx-0 small:px-0">
               {latestProducts.map((product) => (
-                <li key={product.id}>
+                <div
+                  key={product.id}
+                  className="w-[76vw] max-w-[340px] flex-none snap-start small:w-[31vw] large:w-[23.5%]"
+                >
                   <ProductPreview
                     product={product}
                     region={region}
                     isFeatured
                   />
-                </li>
+                </div>
               ))}
-            </ul>
+            </CarouselRail>
           </div>
         )}
         {collections.length > 0 && (
@@ -173,32 +177,42 @@ export default async function Home(props: {
         )}
       </section>
 
-      <section className="content-container grid gap-4 py-16 small:grid-cols-[0.8fr_1.2fr] small:py-24">
-        <div className="flex flex-col justify-between gap-10 bg-[#111111] p-8 text-white small:p-10">
-          <div>
-            <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">
-              Campaign
-            </p>
-            <h2 className="text-[42px] font-medium leading-none small:text-[70px]">
-              Built for movement, styled for stillness.
-            </h2>
+      <section className="bg-white py-10 small:py-20">
+        <div className="content-container grid gap-4 small:grid-cols-[0.8fr_1.2fr]">
+          <div className="flex flex-col justify-between gap-10 rounded-[22px] border border-black/10 bg-white/70 p-6 text-[#111111] shadow-[0_24px_80px_rgba(0,0,0,0.10)] backdrop-blur-2xl small:rounded-[28px] small:p-10">
+            <div>
+              <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
+                Campaign
+              </p>
+              <h2 className="text-[40px] font-medium leading-none small:text-[70px]">
+                Built for movement, styled for stillness.
+              </h2>
+              <p className="mt-6 max-w-[360px] text-[14px] leading-6 text-[#55504a]">
+                Layered glass, stark silhouettes, and image-led commerce with
+                enough edge to feel current.
+              </p>
+            </div>
+            <LocalizedClientLink
+              href="/store"
+              className="inline-flex h-11 w-fit items-center justify-center rounded-[10px] border border-black/10 bg-white/70 px-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#111111] shadow-[0_10px_30px_rgba(0,0,0,0.05)] backdrop-blur-xl transition-colors hover:bg-[#111111] hover:text-white"
+            >
+              View Edit
+            </LocalizedClientLink>
           </div>
-          <LocalizedClientLink
-            href="/store"
-            className="inline-flex h-12 w-fit items-center justify-center border border-white px-7 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors hover:bg-white hover:text-[#111111]"
+          <CarouselRail
+            className="-mx-6 px-6 small:mx-0 small:px-0"
+            trackClassName="small:grid small:min-h-[560px] small:grid-cols-3 small:overflow-visible small:pb-0"
+            controlsClassName="small:hidden"
           >
-            View Edit
-          </LocalizedClientLink>
-        </div>
-        <div className="grid min-h-[620px] gap-4 small:grid-cols-3">
-          {campaignImages.map((image, index) => (
-            <img
-              key={image}
-              src={image}
-              alt={`Campaign look ${index + 1}`}
-              className="h-full min-h-[360px] w-full object-cover"
-            />
-          ))}
+            {campaignImages.map((image, index) => (
+              <img
+                key={image}
+                src={image}
+                alt={`Campaign look ${index + 1}`}
+                className="h-[360px] w-[78vw] flex-none snap-start rounded-[22px] border border-black/10 bg-[#f3f1ed] object-contain shadow-[0_24px_70px_rgba(0,0,0,0.12)] small:h-full small:min-h-[520px] small:w-full small:rounded-[28px] small:object-cover"
+              />
+            ))}
+          </CarouselRail>
         </div>
       </section>
     </>

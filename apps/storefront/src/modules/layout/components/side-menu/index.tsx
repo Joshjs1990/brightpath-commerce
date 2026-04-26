@@ -33,13 +33,13 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
   return (
     <div className="h-full">
       <div className="flex items-center h-full">
-        <Popover className="h-full flex">
+        <Popover className="h-full flex items-center">
           {({ open, close }) => (
             <>
-              <div className="relative flex h-full">
+              <div className="relative flex h-full items-center">
                 <Popover.Button
                   data-testid="nav-menu-button"
-                  className="relative flex h-full items-center text-[11px] font-semibold uppercase tracking-[0.12em] transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
+                  className="relative flex h-10 items-center rounded-[10px] border border-white/60 bg-white/70 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] shadow-[0_10px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
                 >
                   Menu
                 </Popover.Button>
@@ -47,7 +47,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
 
               {open && (
                 <div
-                  className="fixed inset-0 z-[50] bg-black/0 pointer-events-auto"
+                  className="fixed inset-0 z-[50] bg-black/25 backdrop-blur-md pointer-events-auto"
                   onClick={close}
                   data-testid="side-menu-backdrop"
                 />
@@ -63,13 +63,17 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                 leaveFrom="opacity-100 backdrop-blur-2xl"
                 leaveTo="opacity-0"
               >
-                <PopoverPanel className="flex flex-col absolute w-full pr-4 sm:pr-0 sm:w-1/3 2xl:w-1/4 sm:min-w-min h-[calc(100vh-1rem)] z-[51] inset-x-0 text-sm text-white m-2 backdrop-blur-2xl">
+                <PopoverPanel className="flex flex-col absolute w-full pr-4 sm:pr-0 sm:w-1/3 2xl:w-1/4 sm:min-w-min h-[calc(100vh-1rem)] z-[51] inset-x-0 text-sm text-[#111111] m-2 backdrop-blur-2xl">
                   <div
                     data-testid="nav-menu-popup"
-                    className="flex flex-col h-full bg-[#111111] rounded-none justify-between p-6"
+                    className="flex flex-col h-full justify-between rounded-[24px] border border-white/60 bg-white/82 p-6 shadow-[0_30px_100px_rgba(0,0,0,0.18)] backdrop-blur-2xl"
                   >
                     <div className="flex justify-end" id="xmark">
-                      <button data-testid="close-menu-button" onClick={close}>
+                      <button
+                        data-testid="close-menu-button"
+                        onClick={close}
+                        className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-black/10 bg-white/70 backdrop-blur-xl"
+                      >
                         <XMark />
                       </button>
                     </div>
@@ -88,7 +92,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                             <li key={name}>
                               <LocalizedClientLink
                                 href={href}
-                                className="text-[34px] leading-none tracking-[-0.01em] hover:text-white/55"
+                                className="text-[34px] leading-none tracking-[-0.01em] hover:text-black/55"
                                 onClick={close}
                                 data-testid={`${name.toLowerCase()}-link`}
                               >
@@ -137,7 +141,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                           )}
                         />
                       </div>
-                      <Text className="flex justify-between txt-compact-small text-white/60">
+                      <Text className="flex justify-between txt-compact-small text-black/55">
                         © {new Date().getFullYear()} Brightpath. All rights
                         reserved.
                       </Text>

@@ -28,14 +28,22 @@ export default async function ProductPreview({
   })
 
   return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group block">
-      <div data-testid="product-wrapper" className="flex flex-col rounded-xl overflow-hidden border border-gray-100 bg-white hover:border-gray-300 transition-all duration-300 hover:shadow-lg-modern">
-        <div className="relative overflow-hidden bg-gray-50 aspect-square">
+    <LocalizedClientLink
+      href={`/products/${product.handle}`}
+      className="group block"
+    >
+      <div
+        data-testid="product-wrapper"
+        className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white transition-all duration-300 hover:border-gray-300 hover:shadow-lg-modern"
+      >
+        <div className="relative aspect-square overflow-hidden bg-[#f4f2ee]">
           <Thumbnail
             thumbnail={product.thumbnail}
             images={product.images}
             size="full"
             isFeatured={isFeatured}
+            fit="cover"
+            className="!aspect-square bg-transparent"
           />
           {isFeatured && (
             <div className="absolute top-3 left-3 bg-gray-900/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-[0.12em]">
