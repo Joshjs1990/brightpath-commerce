@@ -5,6 +5,7 @@ import useToggleState from "@lib/hooks/use-toggle-state"
 import { ArrowRightMini, XMark } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import BrightpathLogo from "@modules/common/icons/brightpath-logo"
 import { Text, clx } from "@modules/common/components/ui"
 import { Fragment } from "react"
 import CountrySelect from "../country-select"
@@ -38,7 +39,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
               <div className="relative flex h-full">
                 <Popover.Button
                   data-testid="nav-menu-button"
-                  className="relative h-full flex items-center transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
+                  className="relative flex h-full items-center text-[11px] font-semibold uppercase tracking-[0.12em] transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
                 >
                   Menu
                 </Popover.Button>
@@ -75,10 +76,11 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                     <div>
                       <LocalizedClientLink
                         href="/"
-                        className="mb-12 block text-[18px] font-semibold uppercase tracking-[0.22em]"
+                        className="mb-12 flex items-center gap-3 text-[18px] font-semibold uppercase tracking-[0.22em]"
                         onClick={close}
                       >
-                        Brightpath
+                        <BrightpathLogo className="h-7 w-7" />
+                        <span>Brightpath</span>
                       </LocalizedClientLink>
                       <ul className="flex flex-col gap-6 items-start justify-start">
                         {Object.entries(SideMenuItems).map(([name, href]) => {

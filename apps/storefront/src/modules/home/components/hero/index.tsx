@@ -2,41 +2,41 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[calc(100vh-76px)] overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950">
+    <section className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-black">
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1552062407-c551eeda4bae?auto=format&fit=crop&w=2200&q=85"
-          alt="Modern fashion collection"
-          className="h-full w-full object-cover opacity-40"
+          src="/images/brightpath-edgy-hero.png"
+          alt="Abstract black and white fashion campaign"
+          className="h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/50" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_18%,rgba(255,255,255,0.12),transparent_28%),linear-gradient(90deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.50)_36%,rgba(0,0,0,0.10)_100%)]" />
       </div>
-      <div className="content-container relative z-10 flex min-h-[calc(100vh-76px)] flex-col justify-end pb-12 pt-32 small:pb-20">
-        <div className="grid gap-12 small:grid-cols-[1.2fr_0.8fr] small:items-end">
-          <div className="max-w-[840px]">
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.25em] text-white/60 animate-fade-in-right">
-              Spring Collection 2026
+      <div className="content-container relative z-10 flex min-h-[calc(100vh-64px)] flex-col justify-end pb-10 pt-28 small:pb-16">
+        <div className="grid gap-10 small:grid-cols-[1.1fr_0.9fr] small:items-end">
+          <div className="max-w-[900px]">
+            <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.26em] text-white/55">
+              Abstract fashion system 01
             </p>
-            <h1 className="max-w-[900px] text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight text-white mb-2 animate-fade-in-right" style={{animationDelay: '0.1s'}}>
-              Refined
-              <span className="block text-accent-300">Simplicity</span>
+            <h1 className="max-w-[900px] text-[58px] font-semibold leading-[0.9] tracking-normal text-white small:text-[118px]">
+              Edges in motion
             </h1>
-            <div className="w-12 h-1 bg-gradient-to-r from-accent-400 to-accent-300 mt-6 mb-8"></div>
+            <div className="mt-7 h-px w-24 bg-white/70" />
           </div>
           <div className="max-w-[420px] justify-self-start small:justify-self-end">
-            <p className="mb-8 text-base leading-7 text-white/80">
-              Elevated essentials for the modern wardrobe. Clean lines, thoughtful details, and timeless pieces built to last.
+            <p className="mb-7 text-[15px] leading-7 text-white/72">
+              Black tailoring, reflective surfaces, and pieces made to feel
+              sharper than the usual seasonal uniform.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3">
               <LocalizedClientLink
                 href="/store"
-                className="inline-flex h-13 items-center justify-center bg-white px-8 text-xs font-bold uppercase tracking-[0.16em] text-black transition-all hover:shadow-lg-modern hover:scale-105 rounded-lg"
+                className="inline-flex h-11 items-center justify-center rounded-[10px] bg-white px-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-black transition-colors hover:bg-white/82"
               >
                 Shop Now
               </LocalizedClientLink>
               <LocalizedClientLink
                 href="/store"
-                className="inline-flex h-13 items-center justify-center border-2 border-white/60 px-8 text-xs font-bold uppercase tracking-[0.16em] text-white transition-all hover:border-white hover:bg-white/10 backdrop-blur-sm rounded-lg"
+                className="inline-flex h-11 items-center justify-center rounded-[10px] border border-white/45 px-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-white/10"
               >
                 New In
               </LocalizedClientLink>

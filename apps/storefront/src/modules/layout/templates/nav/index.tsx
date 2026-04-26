@@ -5,6 +5,7 @@ import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
 import { StoreRegion } from "@medusajs/types"
 import { MagnifyingGlass, User, Heart } from "@medusajs/icons"
+import BrightpathLogo from "@modules/common/icons/brightpath-logo"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
@@ -24,16 +25,10 @@ export default async function Nav() {
   ])
 
   return (
-    <div className="sticky top-0 inset-x-0 z-50 group bg-white/65 backdrop-blur-lg border-b border-gray-200/30">
-      <div className="hidden small:block border-b border-gray-200/30 bg-gradient-to-r from-white/50 to-white/30 backdrop-blur-sm">
-        <div className="content-container flex h-8 items-center justify-between text-[10px] font-medium uppercase tracking-[0.14em] text-gray-700">
-          <span>✓ Complimentary shipping over $150</span>
-          <span>Spring edit now live</span>
-        </div>
-      </div>
-      <header className="relative h-[76px] mx-auto duration-200">
-        <nav className="content-container grid h-full w-full grid-cols-[1fr_auto_1fr] items-center text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-900">
-          <div className="flex h-full items-center gap-8">
+    <div className="sticky inset-x-0 top-0 z-50 border-b border-black/10 bg-white/82 backdrop-blur-xl">
+      <header className="relative mx-auto h-[64px] duration-200">
+        <nav className="content-container grid h-full w-full grid-cols-[1fr_auto_1fr] items-center text-[11px] font-semibold uppercase tracking-[0.12em] text-[#111111]">
+          <div className="flex h-full items-center gap-5">
             <div className="h-full small:hidden">
               <SideMenu
                 regions={regions}
@@ -41,12 +36,12 @@ export default async function Nav() {
                 currentLocale={currentLocale}
               />
             </div>
-            <div className="hidden small:flex h-full items-center gap-1 bg-gray-900/5 px-4 py-2 rounded-full backdrop-blur-sm border border-gray-900/10">
+            <div className="hidden h-10 items-center gap-1 rounded-[10px] border border-black/10 bg-white/60 px-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.04)] small:flex">
               {mainLinks.map((link) => (
                 <LocalizedClientLink
                   key={link.label}
                   href={link.href}
-                  className="relative flex items-center group/nav px-3 py-1.5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-gray-900 after:transition-all after:duration-300 hover:after:w-full rounded-md hover:bg-white/40 transition-colors"
+                  className="relative flex h-7 items-center rounded-[7px] px-2.5 after:absolute after:bottom-1 after:left-2.5 after:h-px after:w-0 after:bg-current after:transition-all after:duration-300 hover:bg-black/[0.04] hover:after:w-[calc(100%-20px)]"
                 >
                   {link.label}
                 </LocalizedClientLink>
@@ -57,43 +52,59 @@ export default async function Nav() {
           <div className="flex h-full items-center justify-center">
             <LocalizedClientLink
               href="/"
-              className="text-lg font-bold leading-none tracking-[0.25em] hover:opacity-70 transition-opacity"
+              className="flex items-center gap-2.5 text-[16px] font-semibold leading-none tracking-[0.22em] transition-opacity hover:opacity-65"
               data-testid="nav-store-link"
             >
-              Brightpath
+              <BrightpathLogo className="h-6 w-6" />
+              <span>Brightpath</span>
             </LocalizedClientLink>
           </div>
 
-          <div className="flex h-full items-center justify-end gap-1">
-            <div className="hidden small:flex items-center gap-1 bg-gray-900/5 px-3 py-2 rounded-full backdrop-blur-sm border border-gray-900/10">
+          <div className="flex h-full items-center justify-end gap-1.5">
+            <div className="hidden h-10 items-center gap-1 rounded-[10px] border border-black/10 bg-white/60 px-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.04)] small:flex">
               <LocalizedClientLink
-                className="flex h-9 w-9 items-center justify-center rounded-md transition-all hover:bg-white/40"
+                className="flex h-7 w-7 items-center justify-center rounded-[7px] transition-colors hover:bg-black/[0.04]"
                 href="/store"
                 aria-label="Search products"
               >
-                <MagnifyingGlass className="h-4 w-4" />
+                <MagnifyingGlass className="h-3.5 w-3.5" />
               </LocalizedClientLink>
               <LocalizedClientLink
-                className="flex h-9 w-9 items-center justify-center rounded-md transition-all hover:bg-white/40"
+                className="flex h-7 w-7 items-center justify-center rounded-[7px] transition-colors hover:bg-black/[0.04]"
                 href="/account"
                 data-testid="nav-account-link"
                 aria-label="Account"
               >
-                <User className="h-4 w-4" />
+                <User className="h-3.5 w-3.5" />
               </LocalizedClientLink>
               <LocalizedClientLink
-                className="flex h-9 w-9 items-center justify-center rounded-md transition-all hover:bg-white/40"
+                className="flex h-7 w-7 items-center justify-center rounded-[7px] transition-colors hover:bg-black/[0.04]"
                 href="/store"
                 aria-label="Wishlist"
               >
-                <Heart className="h-4 w-4" />
+                <Heart className="h-3.5 w-3.5" />
               </LocalizedClientLink>
             </div>
-            <div className="hidden small:flex ml-1 bg-gray-900/5 px-3 py-2 rounded-full backdrop-blur-sm border border-gray-900/10 h-full items-center">
+            <div className="hidden h-10 items-center rounded-[10px] border border-black/10 bg-white/60 px-3 shadow-[0_10px_30px_rgba(0,0,0,0.04)] small:flex">
               <Suspense
                 fallback={
                   <LocalizedClientLink
-                    className="flex items-center hover:text-ui-fg-base text-xs font-semibold"
+                    className="flex h-full items-center text-[11px] font-semibold hover:text-ui-fg-base"
+                    href="/cart"
+                    data-testid="nav-cart-link"
+                  >
+                    Cart (0)
+                  </LocalizedClientLink>
+                }
+              >
+                <CartButton />
+              </Suspense>
+            </div>
+            <div className="flex h-full items-center small:hidden">
+              <Suspense
+                fallback={
+                  <LocalizedClientLink
+                    className="flex items-center"
                     href="/cart"
                     data-testid="nav-cart-link"
                   >
