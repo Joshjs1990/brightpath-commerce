@@ -24,9 +24,9 @@ export default async function Nav() {
   ])
 
   return (
-    <div className="sticky top-0 inset-x-0 z-50 group bg-white/98 backdrop-blur-md border-b border-gray-200/50">
-      <div className="hidden small:block border-b border-gray-200/50 bg-gray-50">
-        <div className="content-container flex h-8 items-center justify-between text-[10px] font-medium uppercase tracking-[0.14em] text-gray-600">
+    <div className="sticky top-0 inset-x-0 z-50 group bg-white/65 backdrop-blur-lg border-b border-gray-200/30">
+      <div className="hidden small:block border-b border-gray-200/30 bg-gradient-to-r from-white/50 to-white/30 backdrop-blur-sm">
+        <div className="content-container flex h-8 items-center justify-between text-[10px] font-medium uppercase tracking-[0.14em] text-gray-700">
           <span>✓ Complimentary shipping over $150</span>
           <span>Spring edit now live</span>
         </div>
@@ -41,12 +41,12 @@ export default async function Nav() {
                 currentLocale={currentLocale}
               />
             </div>
-            <div className="hidden small:flex h-full items-center gap-8">
+            <div className="hidden small:flex h-full items-center gap-1 bg-gray-900/5 px-4 py-2 rounded-full backdrop-blur-sm border border-gray-900/10">
               {mainLinks.map((link) => (
                 <LocalizedClientLink
                   key={link.label}
                   href={link.href}
-                  className="relative flex h-full items-center group/nav pb-1 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-gray-900 after:transition-all after:duration-300 hover:after:w-full"
+                  className="relative flex items-center group/nav px-3 py-1.5 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-gray-900 after:transition-all after:duration-300 hover:after:w-full rounded-md hover:bg-white/40 transition-colors"
                 >
                   {link.label}
                 </LocalizedClientLink>
@@ -64,34 +64,36 @@ export default async function Nav() {
             </LocalizedClientLink>
           </div>
 
-          <div className="flex h-full items-center justify-end gap-2 small:gap-4">
-            <LocalizedClientLink
-              className="hidden small:flex h-10 w-10 items-center justify-center rounded-lg transition-all hover:bg-gray-100 hover:shadow-sm-modern"
-              href="/store"
-              aria-label="Search products"
-            >
-              <MagnifyingGlass className="h-4 w-4" />
-            </LocalizedClientLink>
-            <LocalizedClientLink
-              className="hidden small:flex h-10 w-10 items-center justify-center rounded-lg transition-all hover:bg-gray-100 hover:shadow-sm-modern"
-              href="/account"
-              data-testid="nav-account-link"
-              aria-label="Account"
-            >
-              <User className="h-4 w-4" />
-            </LocalizedClientLink>
-            <LocalizedClientLink
-              className="hidden small:flex h-10 w-10 items-center justify-center rounded-lg transition-all hover:bg-gray-100 hover:shadow-sm-modern"
-              href="/store"
-              aria-label="Wishlist"
-            >
-              <Heart className="h-4 w-4" />
-            </LocalizedClientLink>
-            <div className="h-full">
+          <div className="flex h-full items-center justify-end gap-1">
+            <div className="hidden small:flex items-center gap-1 bg-gray-900/5 px-3 py-2 rounded-full backdrop-blur-sm border border-gray-900/10">
+              <LocalizedClientLink
+                className="flex h-9 w-9 items-center justify-center rounded-md transition-all hover:bg-white/40"
+                href="/store"
+                aria-label="Search products"
+              >
+                <MagnifyingGlass className="h-4 w-4" />
+              </LocalizedClientLink>
+              <LocalizedClientLink
+                className="flex h-9 w-9 items-center justify-center rounded-md transition-all hover:bg-white/40"
+                href="/account"
+                data-testid="nav-account-link"
+                aria-label="Account"
+              >
+                <User className="h-4 w-4" />
+              </LocalizedClientLink>
+              <LocalizedClientLink
+                className="flex h-9 w-9 items-center justify-center rounded-md transition-all hover:bg-white/40"
+                href="/store"
+                aria-label="Wishlist"
+              >
+                <Heart className="h-4 w-4" />
+              </LocalizedClientLink>
+            </div>
+            <div className="hidden small:flex ml-1 bg-gray-900/5 px-3 py-2 rounded-full backdrop-blur-sm border border-gray-900/10 h-full items-center">
               <Suspense
                 fallback={
                   <LocalizedClientLink
-                    className="flex h-full items-center hover:text-ui-fg-base"
+                    className="flex items-center hover:text-ui-fg-base text-xs font-semibold"
                     href="/cart"
                     data-testid="nav-cart-link"
                   >

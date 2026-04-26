@@ -28,9 +28,9 @@ export default async function ProductPreview({
   })
 
   return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group block h-full">
-      <div data-testid="product-wrapper" className="flex flex-col h-full rounded-xl overflow-hidden border border-gray-100 bg-white hover:border-gray-300 transition-all duration-300 hover:shadow-lg-modern">
-        <div className="relative overflow-hidden bg-gray-50 flex-1">
+    <LocalizedClientLink href={`/products/${product.handle}`} className="group block">
+      <div data-testid="product-wrapper" className="flex flex-col rounded-xl overflow-hidden border border-gray-100 bg-white hover:border-gray-300 transition-all duration-300 hover:shadow-lg-modern">
+        <div className="relative overflow-hidden bg-gray-50 aspect-square">
           <Thumbnail
             thumbnail={product.thumbnail}
             images={product.images}
@@ -38,12 +38,12 @@ export default async function ProductPreview({
             isFeatured={isFeatured}
           />
           {isFeatured && (
-            <div className="absolute top-4 left-4 bg-gray-900/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-[0.12em]">
+            <div className="absolute top-3 left-3 bg-gray-900/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-[0.12em]">
               Featured
             </div>
           )}
         </div>
-        <div className="p-5 flex flex-col justify-between flex-1">
+        <div className="p-4 flex flex-col gap-2">
           <div>
             <Text
               className="font-bold text-gray-900 text-sm leading-5 line-clamp-2"
@@ -51,11 +51,11 @@ export default async function ProductPreview({
             >
               {product.title}
             </Text>
-            <p className="mt-2 text-[10px] uppercase tracking-[0.16em] text-gray-500 font-semibold">
+            <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-gray-500 font-semibold">
               New season
             </p>
           </div>
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
             {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
             <div className="text-xs text-gray-400 group-hover:text-gray-600 transition-colors">
               →
