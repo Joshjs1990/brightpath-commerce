@@ -21,6 +21,7 @@ export default function CarouselRail({
   const startX = useRef(0)
   const startScrollLeft = useRef(0)
   const dragged = useRef(false)
+  const hasPointerCapture = useRef(false)
   const [isDragging, setIsDragging] = useState(false)
 
   const scroll = (direction: "prev" | "next") => {
@@ -48,10 +49,9 @@ export default function CarouselRail({
 
     isPointerDown.current = true
     dragged.current = false
+    hasPointerCapture.current = false
     startX.current = event.clientX
     startScrollLeft.current = track.scrollLeft
-    setIsDragging(true)
-    track.setPointerCapture(event.pointerId)
   }
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
@@ -63,11 +63,19 @@ export default function CarouselRail({
 
     const delta = event.clientX - startX.current
 
-    if (Math.abs(delta) > 6) {
+    if (Math.abs(delta) > 12) {
       dragged.current = true
+      setIsDragging(true)
+
+      if (!hasPointerCapture.current) {
+        track.setPointerCapture(event.pointerId)
+        hasPointerCapture.current = true
+      }
     }
 
-    track.scrollLeft = startScrollLeft.current - delta
+    if (dragged.current) {
+      track.scrollLeft = startScrollLeft.current - delta
+    }
   }
 
   const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
@@ -75,7 +83,11 @@ export default function CarouselRail({
 
     isPointerDown.current = false
     setIsDragging(false)
-    track?.releasePointerCapture(event.pointerId)
+
+    if (track && hasPointerCapture.current) {
+      track.releasePointerCapture(event.pointerId)
+      hasPointerCapture.current = false
+    }
 
     if (dragged.current) {
       window.setTimeout(() => {

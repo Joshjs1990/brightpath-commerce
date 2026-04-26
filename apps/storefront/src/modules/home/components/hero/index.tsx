@@ -23,10 +23,6 @@ const Hero = () => {
             <div className="mt-7 h-px w-24 bg-white/70" />
           </div>
           <div className="max-w-[420px] justify-self-start small:justify-self-end">
-            <p className="mb-7 text-[15px] leading-7 text-white/72">
-              Black tailoring, reflective surfaces, and pieces made to feel
-              sharper than the usual seasonal uniform.
-            </p>
             <div className="flex flex-wrap gap-3">
               <LocalizedClientLink
                 href="/store"
