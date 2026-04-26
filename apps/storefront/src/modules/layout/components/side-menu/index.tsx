@@ -47,7 +47,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
 
               {open && (
                 <div
-                  className="fixed inset-0 z-[50] bg-black/25 backdrop-blur-md pointer-events-auto"
+                  className="fixed inset-0 z-[50] bg-black/18 backdrop-blur-sm pointer-events-auto"
                   onClick={close}
                   data-testid="side-menu-backdrop"
                 />
@@ -63,10 +63,10 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                 leaveFrom="opacity-100 backdrop-blur-2xl"
                 leaveTo="opacity-0"
               >
-                <PopoverPanel className="flex flex-col absolute w-full pr-4 sm:pr-0 sm:w-1/3 2xl:w-1/4 sm:min-w-min h-[calc(100vh-1rem)] z-[51] inset-x-0 text-sm text-[#111111] m-2 backdrop-blur-2xl">
+                <PopoverPanel className="fixed left-3 right-3 top-[76px] bottom-3 z-[51] flex flex-col text-sm text-[#111111] small:absolute small:bottom-auto small:left-2 small:right-auto small:top-[calc(100%+12px)] small:h-[calc(100vh-6rem)] small:w-[420px]">
                   <div
                     data-testid="nav-menu-popup"
-                    className="flex flex-col h-full justify-between rounded-[24px] border border-white/60 bg-white/82 p-6 shadow-[0_30px_100px_rgba(0,0,0,0.18)] backdrop-blur-2xl"
+                    className="flex h-full flex-col justify-between overflow-hidden rounded-[24px] border border-white/70 bg-[#f7f4ef]/95 p-6 shadow-[0_30px_100px_rgba(0,0,0,0.18)] backdrop-blur-xl"
                   >
                     <div className="flex justify-end" id="xmark">
                       <button
