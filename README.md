@@ -149,8 +149,72 @@ The storefront is configured via environment variables in `apps/storefront/.env.
 | `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Publishable API key from your Medusa backend | — |
 | `NEXT_PUBLIC_MEDUSA_BACKEND_URL` | URL of your Medusa backend | `http://localhost:9000` |
 | `NEXT_PUBLIC_DEFAULT_REGION` | Default region country code | `dk` |
-| `NEXT_PUBLIC_BASE_URL` | Base URL of the storefront | `https://localhost:8000` |
+| `NEXT_PUBLIC_BASE_URL` | Base URL of the storefront | `http://localhost:8000` |
 | `NEXT_PUBLIC_STRIPE_KEY` | Stripe publishable key (optional) | — |
+
+## Railway + Vercel Deployment
+
+This repo is split into two deployable apps:
+
+- `apps/backend`: Medusa backend, deploy to Railway.
+- `apps/storefront`: Next.js storefront, deploy to Vercel.
+
+### Railway Backend
+
+Create a Railway service for `apps/backend` and set these variables:
+
+```bash
+DATABASE_URL=postgres://...
+JWT_SECRET=<long-random-secret>
+COOKIE_SECRET=<long-random-secret>
+MEDUSA_BACKEND_URL=https://<your-railway-backend-domain>
+STORE_CORS=https://<your-vercel-storefront-domain>
+AUTH_CORS=https://<your-vercel-storefront-domain>,https://<your-railway-backend-domain>
+ADMIN_CORS=https://<your-railway-backend-domain>
+STRIPE_API_KEY=sk_live_or_test_...
+```
+
+Use `STRIPE_API_KEY` only on the backend. If it is blank, the backend will still run, but Stripe is disabled.
+
+If Railway is pointed at the repository root, use these commands:
+
+```bash
+npm install
+npm run build -w @dtc/backend
+npm run start -w @dtc/backend
+```
+
+If Railway is pointed at `apps/backend`, use `npm install`, `npm run build`, and `npm run start`.
+
+### Vercel Storefront
+
+Create a Vercel project for `apps/storefront` and set these variables:
+
+```bash
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...
+NEXT_PUBLIC_MEDUSA_BACKEND_URL=https://<your-railway-backend-domain>
+NEXT_PUBLIC_BASE_URL=https://<your-vercel-storefront-domain>
+NEXT_PUBLIC_DEFAULT_REGION=dk
+NEXT_PUBLIC_STRIPE_KEY=pk_live_or_test_...
+```
+
+After Vercel gives you the final production domain, add it to `STORE_CORS` and `AUTH_CORS` in Railway, then redeploy the backend.
+
+If Vercel is pointed at the repository root, set the project root directory to `apps/storefront`, or use:
+
+```bash
+npm install
+npm run build -w @dtc/storefront
+```
+
+### Stripe
+
+Stripe requires both keys:
+
+- Railway/backend: `STRIPE_API_KEY=sk_...`
+- Vercel/storefront: `NEXT_PUBLIC_STRIPE_KEY=pk_...`
+
+Use test keys for test mode and live keys for production mode. Do not put the `sk_...` key in Vercel or any client-side environment.
 
 ## Resources
 

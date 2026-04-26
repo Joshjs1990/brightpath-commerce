@@ -52,10 +52,10 @@ export default async function Nav() {
           <div className="flex h-full items-center justify-center">
             <LocalizedClientLink
               href="/"
-              className="flex h-10 items-center gap-2 rounded-[10px] border border-white/60 bg-white/70 px-2.5 text-[13px] font-semibold leading-none tracking-[0.16em] shadow-[0_10px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-opacity hover:opacity-65 small:gap-2.5 small:border-black/10 small:bg-white/60 small:px-3.5 small:text-[16px] small:tracking-[0.22em]"
+              className="flex h-10 items-center gap-2 rounded-[10px] border border-black/10 bg-white/60 px-3 text-[11px] font-semibold uppercase leading-none tracking-[0.12em] shadow-[0_10px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-colors hover:bg-white/80"
               data-testid="nav-store-link"
             >
-              <BrightpathLogo className="h-5 w-5 small:h-6 small:w-6" />
+              <BrightpathLogo className="h-5 w-5" />
               <span>Brightpath</span>
             </LocalizedClientLink>
           </div>
