@@ -1,0 +1,206 @@
+import { Metadata } from "next"
+
+import FeaturedProducts from "@modules/home/components/featured-products"
+import Hero from "@modules/home/components/hero"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import ProductPreview from "@modules/products/components/product-preview"
+import { listCollections } from "@lib/data/collections"
+import { listProducts } from "@lib/data/products"
+import { getRegion } from "@lib/data/regions"
+
+export const metadata: Metadata = {
+  title: "Brightpath Fashion Store",
+  description:
+    "A modern editorial fashion storefront built with Next.js and Medusa.",
+}
+
+const editorialCategories = [
+  {
+    title: "Outerwear",
+    label: "Transitional layers",
+    image:
+      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    title: "Tailoring",
+    label: "Sharp daily pieces",
+    image:
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    title: "Accessories",
+    label: "Considered finishing",
+    image:
+      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80",
+  },
+]
+
+const campaignImages = [
+  "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?auto=format&fit=crop&w=900&q=80",
+]
+
+export default async function Home(props: {
+  params: Promise<{ countryCode: string }>
+}) {
+  const params = await props.params
+
+  const { countryCode } = params
+
+  const region = await getRegion(countryCode)
+
+  const { collections } = await listCollections({
+    fields: "id, handle, title",
+  })
+
+  if (!collections || !region) {
+    return null
+  }
+
+  const {
+    response: { products: latestProducts },
+  } = await listProducts({
+    regionId: region.id,
+    queryParams: {
+      limit: 8,
+    },
+  })
+
+  return (
+    <>
+      <Hero />
+      <section className="border-b border-[#111111]/10 bg-white">
+        <div className="content-container grid gap-8 py-16 small:grid-cols-[0.85fr_1.15fr] small:py-24">
+          <div>
+            <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
+              Wardrobe language
+            </p>
+            <h2 className="max-w-[620px] text-[38px] font-medium leading-[1] tracking-normal small:text-[64px]">
+              Minimal forms, tactile fabrics, exact proportions.
+            </h2>
+          </div>
+          <div className="grid content-end gap-8 small:grid-cols-2">
+            <p className="max-w-[420px] text-[15px] leading-7 text-[#55504a]">
+              Clean silhouettes, textured neutrals, and everyday statement
+              pieces selected for wardrobes that move from day to night.
+            </p>
+            <LocalizedClientLink
+              href="/store"
+              className="inline-flex h-12 w-fit items-center justify-center self-end border border-[#111111] px-7 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors hover:bg-[#111111] hover:text-white"
+            >
+              Explore All
+            </LocalizedClientLink>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f3f1ed] py-6">
+        <div className="flex overflow-hidden whitespace-nowrap text-[42px] font-medium uppercase leading-none tracking-normal text-[#111111] small:text-[86px]">
+          <div className="animate-[marquee_28s_linear_infinite]">
+            New In / Essentials / Sale / Outerwear / Accessories /
+          </div>
+          <div
+            className="animate-[marquee_28s_linear_infinite]"
+            aria-hidden="true"
+          >
+            New In / Essentials / Sale / Outerwear / Accessories /
+          </div>
+        </div>
+      </section>
+
+      <section className="content-container grid gap-4 py-16 small:grid-cols-3 small:py-24">
+        {editorialCategories.map((category) => (
+          <LocalizedClientLink
+            href="/store"
+            key={category.title}
+            className="group relative min-h-[480px] overflow-hidden bg-[#e7e1d7]"
+          >
+            <img
+              src={category.image}
+              alt={`${category.title} collection`}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
+            <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/75">
+                {category.label}
+              </p>
+              <h3 className="text-[34px] font-medium leading-none">
+                {category.title}
+              </h3>
+            </div>
+          </LocalizedClientLink>
+        ))}
+      </section>
+
+      <section className="bg-white">
+        {latestProducts?.length > 0 && (
+          <div className="content-container border-t border-[#111111]/10 py-14 small:py-24">
+            <div className="mb-8 flex items-end justify-between gap-6">
+              <div>
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
+                  Latest arrivals
+                </p>
+                <h2 className="text-[34px] font-medium leading-none small:text-[54px]">
+                  Fresh in store
+                </h2>
+              </div>
+              <LocalizedClientLink
+                href="/store"
+                className="text-[12px] font-semibold uppercase tracking-[0.14em] underline underline-offset-8"
+              >
+                View all
+              </LocalizedClientLink>
+            </div>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-12 small:grid-cols-4 small:gap-x-5 small:gap-y-16">
+              {latestProducts.map((product) => (
+                <li key={product.id}>
+                  <ProductPreview
+                    product={product}
+                    region={region}
+                    isFeatured
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {collections.length > 0 && (
+          <ul className="flex flex-col gap-x-6">
+            <FeaturedProducts collections={collections} region={region} />
+          </ul>
+        )}
+      </section>
+
+      <section className="content-container grid gap-4 py-16 small:grid-cols-[0.8fr_1.2fr] small:py-24">
+        <div className="flex flex-col justify-between gap-10 bg-[#111111] p-8 text-white small:p-10">
+          <div>
+            <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">
+              Campaign
+            </p>
+            <h2 className="text-[42px] font-medium leading-none small:text-[70px]">
+              Built for movement, styled for stillness.
+            </h2>
+          </div>
+          <LocalizedClientLink
+            href="/store"
+            className="inline-flex h-12 w-fit items-center justify-center border border-white px-7 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors hover:bg-white hover:text-[#111111]"
+          >
+            View Edit
+          </LocalizedClientLink>
+        </div>
+        <div className="grid min-h-[620px] gap-4 small:grid-cols-3">
+          {campaignImages.map((image, index) => (
+            <img
+              key={image}
+              src={image}
+              alt={`Campaign look ${index + 1}`}
+              className="h-full min-h-[360px] w-full object-cover"
+            />
+          ))}
+        </div>
+      </section>
+    </>
+  )
+}
