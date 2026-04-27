@@ -9,11 +9,12 @@ const Hero = () => {
           alt="Abstract black and white fashion campaign"
           className="h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_18%,rgba(255,255,255,0.12),transparent_28%),linear-gradient(90deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.50)_36%,rgba(0,0,0,0.10)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:84px_84px] opacity-35" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_18%,rgba(255,255,255,0.16),transparent_28%),linear-gradient(90deg,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.52)_36%,rgba(0,0,0,0.10)_100%)]" />
       </div>
       <div className="content-container relative z-10 flex min-h-[calc(100vh-64px)] flex-col justify-end pb-10 pt-28 small:pb-16">
         <div className="grid gap-10 small:grid-cols-[1.1fr_0.9fr] small:items-end">
-          <div className="max-w-[900px]">
+          <div className="reveal-up max-w-[900px]">
             <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.26em] text-white/55">
               Abstract fashion system 01
             </p>
@@ -22,7 +23,7 @@ const Hero = () => {
             </h1>
             <div className="mt-7 h-px w-24 bg-white/70" />
           </div>
-          <div className="max-w-[420px] justify-self-start small:justify-self-end">
+          <div className="reveal-up delay-1 max-w-[420px] justify-self-start small:justify-self-end">
             <div className="flex flex-wrap gap-3">
               <LocalizedClientLink
                 href="/store"

@@ -103,9 +103,9 @@ export default async function Home(props: {
   return (
     <>
       <Hero />
-      <section className="border-b border-[#111111]/10 bg-white">
+      <section className="border-b border-[#111111]/10 bg-white/82 backdrop-blur-sm">
         <div className="content-container grid gap-8 py-16 small:grid-cols-[0.85fr_1.15fr] small:py-24">
-          <div>
+          <div className="reveal-up">
             <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
               Wardrobe language
             </p>
@@ -113,7 +113,7 @@ export default async function Home(props: {
               Minimal forms, tactile fabrics, exact proportions.
             </h2>
           </div>
-          <div className="grid content-end gap-8 small:grid-cols-2">
+          <div className="reveal-up delay-1 grid content-end gap-8 small:grid-cols-2">
             <p className="max-w-[420px] text-[15px] leading-7 text-[#55504a]">
               Clean silhouettes, textured neutrals, and everyday statement
               pieces selected for wardrobes that move from day to night.
@@ -128,7 +128,7 @@ export default async function Home(props: {
         </div>
       </section>
 
-      <section className="bg-[#f3f1ed] py-6">
+      <section className="border-y border-black/10 bg-white/70 py-6 backdrop-blur-xl">
         <div className="flex overflow-hidden whitespace-nowrap text-[42px] font-medium uppercase leading-none tracking-normal text-[#111111] small:text-[86px]">
           <div className="animate-[marquee_28s_linear_infinite]">
             {categoryMarquee} /
@@ -147,7 +147,7 @@ export default async function Home(props: {
           <LocalizedClientLink
             href={category.href}
             key={category.title}
-            className="group relative min-h-[480px] overflow-hidden bg-[#e7e1d7]"
+            className="premium-panel group relative min-h-[480px] overflow-hidden rounded-[18px] bg-[#e7e1d7] transition-transform duration-500 hover:-translate-y-1"
           >
             <img
               src={category.image!}
@@ -167,7 +167,7 @@ export default async function Home(props: {
         ))}
       </section>
 
-      <section className="bg-white">
+      <section className="bg-white/86 backdrop-blur-sm">
         {latestProducts?.length > 0 && (
           <div className="content-container border-t border-[#111111]/10 py-12 small:py-24">
             <div className="mb-8 flex items-end justify-between gap-6">
@@ -209,9 +209,9 @@ export default async function Home(props: {
         )}
       </section>
 
-      <section className="bg-white py-10 small:py-20">
+      <section className="bg-white/86 py-10 backdrop-blur-sm small:py-20">
         <div className="content-container grid gap-4 small:grid-cols-[0.8fr_1.2fr]">
-          <div className="flex flex-col justify-between gap-10 rounded-[22px] border border-black/10 bg-white/70 p-6 text-[#111111] shadow-[0_24px_80px_rgba(0,0,0,0.10)] backdrop-blur-2xl small:rounded-[28px] small:p-10">
+          <div className="premium-panel flex flex-col justify-between gap-10 rounded-[18px] p-6 text-[#111111] small:p-10">
             <div>
               <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
                 Campaign

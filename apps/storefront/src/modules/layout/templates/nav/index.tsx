@@ -37,7 +37,7 @@ export default async function Nav() {
   const mainLinks = categoryLinks.length > 0 ? categoryLinks : fallbackLinks
 
   return (
-    <div className="sticky inset-x-0 top-0 z-50 border-b border-black/10 bg-white/82 backdrop-blur-xl">
+    <div className="sticky inset-x-0 top-0 z-50 border-b border-black/10 bg-white/[0.78] shadow-[0_1px_0_rgba(255,255,255,0.5)_inset] backdrop-blur-2xl">
       <header className="relative mx-auto h-[64px] duration-200">
         <nav className="content-container grid h-full w-full grid-cols-[1fr_auto_1fr] items-center text-[11px] font-semibold uppercase tracking-[0.12em] text-[#111111]">
           <div className="flex h-full items-center gap-5">
