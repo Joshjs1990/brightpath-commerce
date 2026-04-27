@@ -12,21 +12,24 @@ import CountrySelect from "../country-select"
 import LanguageSelect from "../language-select"
 import { Locale } from "@lib/data/locales"
 
-const SideMenuItems = {
-  Shop: "/store",
-  "New In": "/store",
-  Sale: "/store",
-  Outlet: "/store",
-  Account: "/account",
+type MenuLink = {
+  label: string
+  href: string
 }
 
 type SideMenuProps = {
   regions: HttpTypes.StoreRegion[] | null
   locales: Locale[] | null
   currentLocale: string | null
+  categoryLinks: MenuLink[]
 }
 
-const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
+const SideMenu = ({
+  regions,
+  locales,
+  currentLocale,
+  categoryLinks,
+}: SideMenuProps) => {
   const countryToggleState = useToggleState()
   const languageToggleState = useToggleState()
 
@@ -87,20 +90,30 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                         <span>Brightpath</span>
                       </LocalizedClientLink>
                       <ul className="flex flex-col gap-6 items-start justify-start">
-                        {Object.entries(SideMenuItems).map(([name, href]) => {
+                        {categoryLinks.map(({ label, href }) => {
                           return (
-                            <li key={name}>
+                            <li key={label}>
                               <LocalizedClientLink
                                 href={href}
                                 className="text-[34px] leading-none tracking-[-0.01em] hover:text-black/55"
                                 onClick={close}
-                                data-testid={`${name.toLowerCase()}-link`}
+                                data-testid={`${label.toLowerCase()}-link`}
                               >
-                                {name}
+                                {label}
                               </LocalizedClientLink>
                             </li>
                           )
                         })}
+                        <li>
+                          <LocalizedClientLink
+                            href="/account"
+                            className="text-[34px] leading-none tracking-[-0.01em] hover:text-black/55"
+                            onClick={close}
+                            data-testid="account-link"
+                          >
+                            Account
+                          </LocalizedClientLink>
+                        </li>
                       </ul>
                     </div>
                     <div className="flex flex-col gap-y-6">

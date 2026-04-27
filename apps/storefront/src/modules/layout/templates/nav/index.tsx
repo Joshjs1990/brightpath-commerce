@@ -3,26 +3,38 @@ import { Suspense } from "react"
 import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
+import { listCategories } from "@lib/data/categories"
 import { StoreRegion } from "@medusajs/types"
 import { MagnifyingGlass, User, Heart } from "@medusajs/icons"
 import BrightpathLogo from "@modules/common/icons/brightpath-logo"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
+import MegaMenu from "@modules/layout/components/mega-menu"
 
-const mainLinks = [
-  { label: "Shop", href: "/store" },
-  { label: "New In", href: "/store" },
-  { label: "Sale", href: "/store" },
-  { label: "Outlet", href: "/store" },
-]
+const fallbackLinks = [{ label: "Shop All", href: "/store" }]
 
 export default async function Nav() {
-  const [regions, locales, currentLocale] = await Promise.all([
+  const [regions, locales, currentLocale, categories] = await Promise.all([
     listRegions().then((regions: StoreRegion[]) => regions),
     listLocales(),
     getLocale(),
+    listCategories({ limit: 24 }).catch(() => []),
   ])
+
+  const menuCategories =
+    categories
+      ?.filter((category) => (category.products?.length ?? 0) > 0)
+      .slice(0, 4)
+
+  const categoryLinks =
+    menuCategories
+      .map((category) => ({
+        label: category.name,
+        href: `/categories/${category.handle}`,
+      })) ?? []
+
+  const mainLinks = categoryLinks.length > 0 ? categoryLinks : fallbackLinks
 
   return (
     <div className="sticky inset-x-0 top-0 z-50 border-b border-black/10 bg-white/82 backdrop-blur-xl">
@@ -34,18 +46,19 @@ export default async function Nav() {
                 regions={regions}
                 locales={locales}
                 currentLocale={currentLocale}
+                categoryLinks={mainLinks}
               />
             </div>
             <div className="hidden h-10 items-center gap-1 rounded-[10px] border border-black/10 bg-white/60 px-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.04)] small:flex">
-              {mainLinks.map((link) => (
-                <LocalizedClientLink
-                  key={link.label}
-                  href={link.href}
-                  className="relative flex h-7 items-center rounded-[7px] px-2.5 after:absolute after:bottom-1 after:left-2.5 after:h-px after:w-0 after:bg-current after:transition-all after:duration-300 hover:bg-black/[0.04] hover:after:w-[calc(100%-20px)]"
-                >
-                  {link.label}
-                </LocalizedClientLink>
-              ))}
+              {menuCategories.length > 0 && (
+                <MegaMenu categories={menuCategories} />
+              )}
+              <LocalizedClientLink
+                href="/store"
+                className="relative flex h-7 items-center rounded-[7px] px-2.5 text-[11px] font-semibold uppercase leading-none tracking-[0.12em] after:absolute after:bottom-1 after:left-2.5 after:h-px after:w-0 after:bg-current after:transition-all after:duration-300 hover:bg-black/[0.04] hover:after:w-[calc(100%-20px)]"
+              >
+                Shop All
+              </LocalizedClientLink>
             </div>
           </div>
 

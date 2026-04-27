@@ -47,6 +47,10 @@ const campaignImages = [
   "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?auto=format&fit=crop&w=900&q=80",
 ]
 
+const hasProducts = (category: Awaited<ReturnType<typeof listCategories>>[number]) => {
+  return (category.products?.length ?? 0) > 0
+}
+
 export default async function Home(props: {
   params: Promise<{ countryCode: string }>
 }) {
@@ -75,8 +79,13 @@ export default async function Home(props: {
     },
   })
 
+  const categoriesWithProducts = categories?.filter(hasProducts) ?? []
+  const homepageCategories = categoriesWithProducts.length
+    ? categoriesWithProducts
+    : categories ?? []
+
   const categoryTiles =
-    categories
+    homepageCategories
       ?.filter((category) => !category.parent_category)
       .slice(0, 3)
       .map((category) => ({
@@ -89,6 +98,11 @@ export default async function Home(props: {
         image: getCategoryImage(category),
       }))
       .filter((category) => category.image) ?? fallbackCategoryTiles
+  const categoryMarquee =
+    (categoriesWithProducts.length ? categoriesWithProducts : categories)
+      ?.slice(0, 6)
+      .map((category) => category.name)
+      .join(" / ") || "New In / Essentials / Sale / Outerwear / Accessories"
 
   return (
     <>
@@ -121,13 +135,13 @@ export default async function Home(props: {
       <section className="bg-[#f3f1ed] py-6">
         <div className="flex overflow-hidden whitespace-nowrap text-[42px] font-medium uppercase leading-none tracking-normal text-[#111111] small:text-[86px]">
           <div className="animate-[marquee_28s_linear_infinite]">
-            New In / Essentials / Sale / Outerwear / Accessories /
+            {categoryMarquee} /
           </div>
           <div
             className="animate-[marquee_28s_linear_infinite]"
             aria-hidden="true"
           >
-            New In / Essentials / Sale / Outerwear / Accessories /
+            {categoryMarquee} /
           </div>
         </div>
       </section>
