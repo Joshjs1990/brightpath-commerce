@@ -8,6 +8,7 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { getCategoryImage } from "@lib/util/category-image"
 
 export default function CategoryTemplate({
   category,
@@ -35,14 +36,37 @@ export default function CategoryTemplate({
   }
 
   getParents(category)
+  const categoryImage = getCategoryImage(category)
 
   return (
     <div
-      className="flex flex-col small:flex-row small:items-start py-6 content-container"
+      className="content-container py-6"
       data-testid="category-container"
     >
-      <RefinementList sortBy={sort} data-testid="sort-by-container" />
-      <div className="w-full">
+      {categoryImage && (
+        <div className="relative mb-10 h-[300px] overflow-hidden rounded-[16px] bg-[#f3f1ed] small:h-[420px]">
+          <img
+            src={categoryImage}
+            alt={`${category.name} category`}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
+          <div className="absolute bottom-0 left-0 p-6 text-white small:p-8">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/70">
+              Category
+            </p>
+            <h1
+              className="text-[44px] font-medium leading-none small:text-[76px]"
+              data-testid="category-page-title"
+            >
+              {category.name}
+            </h1>
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col small:flex-row small:items-start">
+        <RefinementList sortBy={sort} data-testid="sort-by-container" />
+        <div className="w-full">
         <div className="flex flex-row mb-8 text-2xl-semi gap-4">
           {parents &&
             parents.map((parent) => (
@@ -57,7 +81,9 @@ export default function CategoryTemplate({
                 /
               </span>
             ))}
-          <h1 data-testid="category-page-title">{category.name}</h1>
+          {!categoryImage && (
+            <h1 data-testid="category-page-title">{category.name}</h1>
+          )}
         </div>
         {category.description && (
           <div className="mb-8 text-base-regular">
@@ -66,12 +92,29 @@ export default function CategoryTemplate({
         )}
         {category.category_children && (
           <div className="mb-8 text-base-large">
-            <ul className="grid grid-cols-1 gap-2">
+            <ul className="grid grid-cols-1 gap-3 small:grid-cols-3">
               {category.category_children?.map((c) => (
                 <li key={c.id}>
-                  <InteractiveLink href={`/categories/${c.handle}`}>
-                    {c.name}
-                  </InteractiveLink>
+                  {getCategoryImage(c) ? (
+                    <LocalizedClientLink
+                      href={`/categories/${c.handle}`}
+                      className="group relative block h-[180px] overflow-hidden rounded-[12px] bg-[#f3f1ed]"
+                    >
+                      <img
+                        src={getCategoryImage(c)}
+                        alt={`${c.name} category`}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
+                      <span className="absolute bottom-4 left-4 text-[18px] font-medium text-white">
+                        {c.name}
+                      </span>
+                    </LocalizedClientLink>
+                  ) : (
+                    <InteractiveLink href={`/categories/${c.handle}`}>
+                      {c.name}
+                    </InteractiveLink>
+                  )}
                 </li>
               ))}
             </ul>
@@ -91,6 +134,7 @@ export default function CategoryTemplate({
             countryCode={countryCode}
           />
         </Suspense>
+        </div>
       </div>
     </div>
   )

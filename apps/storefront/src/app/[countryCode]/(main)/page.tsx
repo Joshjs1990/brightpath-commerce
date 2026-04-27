@@ -6,8 +6,10 @@ import CarouselRail from "@modules/common/components/carousel-rail"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ProductPreview from "@modules/products/components/product-preview"
 import { listCollections } from "@lib/data/collections"
+import { listCategories } from "@lib/data/categories"
 import { listProducts } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
+import { getCategoryImage } from "@lib/util/category-image"
 
 export const metadata: Metadata = {
   title: "Brightpath Fashion Store",
@@ -15,22 +17,25 @@ export const metadata: Metadata = {
     "A modern editorial fashion storefront built with Next.js and Medusa.",
 }
 
-const editorialCategories = [
+const fallbackCategoryTiles = [
   {
     title: "Outerwear",
     label: "Transitional layers",
+    href: "/store",
     image:
       "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80",
   },
   {
     title: "Tailoring",
     label: "Sharp daily pieces",
+    href: "/store",
     image:
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
   },
   {
     title: "Accessories",
     label: "Considered finishing",
+    href: "/store",
     image:
       "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80",
   },
@@ -55,6 +60,8 @@ export default async function Home(props: {
     fields: "id, handle, title",
   })
 
+  const categories = await listCategories({ limit: 12 })
+
   if (!collections || !region) {
     return null
   }
@@ -67,6 +74,21 @@ export default async function Home(props: {
       limit: 8,
     },
   })
+
+  const categoryTiles =
+    categories
+      ?.filter((category) => !category.parent_category)
+      .slice(0, 3)
+      .map((category) => ({
+        title: category.name,
+        label:
+          typeof category.metadata?.label === "string"
+            ? category.metadata.label
+            : "Shop category",
+        href: `/categories/${category.handle}`,
+        image: getCategoryImage(category),
+      }))
+      .filter((category) => category.image) ?? fallbackCategoryTiles
 
   return (
     <>
@@ -111,14 +133,14 @@ export default async function Home(props: {
       </section>
 
       <section className="content-container grid gap-4 py-16 small:grid-cols-3 small:py-24">
-        {editorialCategories.map((category) => (
+        {categoryTiles.map((category) => (
           <LocalizedClientLink
-            href="/store"
+            href={category.href}
             key={category.title}
             className="group relative min-h-[480px] overflow-hidden bg-[#e7e1d7]"
           >
             <img
-              src={category.image}
+              src={category.image!}
               alt={`${category.title} collection`}
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
