@@ -108,7 +108,37 @@ export async function middleware(request: NextRequest) {
   const cacheIdCookie = request.cookies.get("_medusa_cache_id")
   const cacheId = cacheIdCookie?.value || crypto.randomUUID()
 
-  const regionMap = await getRegionMap(cacheId)
+  let regionMap: Map<string, HttpTypes.StoreRegion | number>
+
+  try {
+    regionMap = await getRegionMap(cacheId)
+  } catch (error) {
+    console.error("Middleware.ts: Error fetching regions", error)
+
+    const firstPathSegment = request.nextUrl.pathname
+      .split("/")[1]
+      ?.toLowerCase()
+
+    if (firstPathSegment && /^[a-z]{2}$/.test(firstPathSegment)) {
+      const response = NextResponse.next()
+
+      if (!cacheIdCookie) {
+        response.cookies.set("_medusa_cache_id", cacheId, {
+          maxAge: 60 * 60 * 24,
+        })
+      }
+
+      return response
+    }
+
+    const redirectPath =
+      request.nextUrl.pathname === "/" ? "" : request.nextUrl.pathname
+    const queryString = request.nextUrl.search || ""
+    const redirectUrl = `${request.nextUrl.origin}/${DEFAULT_REGION}${redirectPath}${queryString}`
+
+    return NextResponse.redirect(redirectUrl, 307)
+  }
+
   const countryCode = await getCountryCode(request, regionMap)
 
   // if the country code is available, use it, otherwise use the default region
