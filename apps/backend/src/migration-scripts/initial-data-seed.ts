@@ -304,18 +304,38 @@ export default async function initial_data_seed({
         {
           name: "Shirts",
           is_active: true,
+          metadata: {
+            image_url:
+              "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=80",
+            label: "Sharp daily pieces",
+          },
         },
         {
           name: "Sweatshirts",
           is_active: true,
+          metadata: {
+            image_url:
+              "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80",
+            label: "Soft structured layers",
+          },
         },
         {
           name: "Pants",
           is_active: true,
+          metadata: {
+            image_url:
+              "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=1000&q=80",
+            label: "Tailored movement",
+          },
         },
         {
           name: "Merch",
           is_active: true,
+          metadata: {
+            image_url:
+              "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=80",
+            label: "Considered finishing",
+          },
         },
       ],
     },

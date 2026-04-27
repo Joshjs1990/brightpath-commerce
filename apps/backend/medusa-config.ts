@@ -1,4 +1,4 @@
-import { loadEnv, defineConfig, Modules } from "@medusajs/framework/utils"
+import { loadEnv, defineConfig } from "@medusajs/framework/utils"
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd())
 
@@ -13,6 +13,39 @@ const paymentProviders = process.env.STRIPE_API_KEY
       },
     ]
   : []
+
+const s3FileProvider =
+  process.env.S3_ACCESS_KEY_ID &&
+  process.env.S3_SECRET_ACCESS_KEY &&
+  process.env.S3_REGION &&
+  process.env.S3_BUCKET
+    ? [
+        {
+          resolve: "@medusajs/medusa/file-s3",
+          id: "s3",
+          options: {
+            file_url: process.env.S3_FILE_URL,
+            access_key_id: process.env.S3_ACCESS_KEY_ID,
+            secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
+            region: process.env.S3_REGION,
+            bucket: process.env.S3_BUCKET,
+            endpoint: process.env.S3_ENDPOINT,
+          },
+        },
+      ]
+    : []
+
+const fileModule =
+  s3FileProvider.length > 0
+    ? [
+        {
+          resolve: "@medusajs/medusa/file",
+          options: {
+            providers: s3FileProvider,
+          },
+        },
+      ]
+    : []
 
 module.exports = defineConfig({
   admin: {
@@ -37,24 +70,6 @@ module.exports = defineConfig({
         providers: paymentProviders,
       },
     },
-    {
-      resolve: "@medusajs/medusa/file",
-      options: {
-        providers: [
-          {
-            resolve: "@medusajs/medusa/file-s3",
-            id: "s3",
-            options: {
-              file_url: process.env.S3_FILE_URL,
-              access_key_id: process.env.S3_ACCESS_KEY_ID,
-              secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
-              region: process.env.S3_REGION,
-              bucket: process.env.S3_BUCKET,
-              endpoint: process.env.S3_ENDPOINT,
-            },
-          },
-        ],
-      },
-    },
+    ...fileModule,
   ],
 })
