@@ -108,55 +108,11 @@ const CartDropdown = ({
           leaveFrom="opacity-100 translate-y-0"
           leaveTo="opacity-0 translate-y-1"
         >
-          <>
-            <div
-              className="fixed inset-x-3 top-[76px] z-[80] rounded-[16px] border border-black/10 bg-white/[0.985] p-4 text-[#111111] shadow-[0_24px_80px_rgba(0,0,0,0.16)] backdrop-blur-md small:hidden"
-              data-testid="mobile-cart-confirmation"
-            >
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <div>
-                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50">
-                    Added to cart
-                  </p>
-                  <h3 className="text-[18px] font-semibold leading-tight">
-                    {latestItem?.title || "Item added"}
-                  </h3>
-                  {latestItem?.variant && (
-                    <div className="mt-1 text-[12px] text-black/55">
-                      <LineItemOptions variant={latestItem.variant} />
-                    </div>
-                  )}
-                </div>
-                {latestItem && (
-                  <LocalizedClientLink
-                    href={`/products/${latestItem.product_handle}`}
-                    className="h-16 w-16 shrink-0 overflow-hidden rounded-[10px] bg-[#f3f1ed]"
-                  >
-                    <Thumbnail
-                      thumbnail={latestItem.thumbnail}
-                      images={latestItem.variant?.product?.images}
-                      size="square"
-                      className="!aspect-square"
-                    />
-                  </LocalizedClientLink>
-                )}
-              </div>
-              <div className="flex items-center justify-between border-t border-black/10 pt-3">
-                <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-black/55">
-                  {totalItems} {totalItems === 1 ? "item" : "items"}
-                </span>
-                <LocalizedClientLink href="/cart" onClick={close}>
-                  <Button size="small" data-testid="mobile-go-to-cart-button">
-                    View bag
-                  </Button>
-                </LocalizedClientLink>
-              </div>
-            </div>
-            <PopoverPanel
-              static
-              className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-[#111111]/10 w-[420px] text-ui-fg-base shadow-[0_20px_60px_rgba(0,0,0,0.08)]"
-              data-testid="nav-cart-dropdown"
-            >
+          <PopoverPanel
+            static
+            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-[#111111]/10 w-[420px] text-ui-fg-base shadow-[0_20px_60px_rgba(0,0,0,0.08)]"
+            data-testid="nav-cart-dropdown"
+          >
               <div className="p-4 flex items-center justify-center">
                 <h3 className="text-large-semi">Cart</h3>
               </div>
@@ -277,10 +233,63 @@ const CartDropdown = ({
                   </div>
                 </div>
               )}
-            </PopoverPanel>
-          </>
+          </PopoverPanel>
         </Transition>
       </Popover>
+      <Transition
+        show={cartDropdownOpen && !!latestItem}
+        as={Fragment}
+        enter="transition ease-out duration-200"
+        enterFrom="opacity-0 -translate-y-2"
+        enterTo="opacity-100 translate-y-0"
+        leave="transition ease-in duration-150"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 -translate-y-2"
+      >
+        <div
+          className="fixed inset-x-3 top-[76px] z-[80] rounded-[16px] border border-black/10 bg-white/[0.985] p-4 text-[#111111] shadow-[0_24px_80px_rgba(0,0,0,0.16)] backdrop-blur-md small:hidden"
+          data-testid="mobile-cart-confirmation"
+        >
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50">
+                Added to cart
+              </p>
+              <h3 className="text-[18px] font-semibold leading-tight">
+                {latestItem?.title || "Item added"}
+              </h3>
+              {latestItem?.variant && (
+                <div className="mt-1 text-[12px] text-black/55">
+                  <LineItemOptions variant={latestItem.variant} />
+                </div>
+              )}
+            </div>
+            {latestItem && (
+              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-[10px] bg-[#f3f1ed]">
+                <Thumbnail
+                  thumbnail={latestItem.thumbnail}
+                  images={latestItem.variant?.product?.images}
+                  size="square"
+                  className="!aspect-square"
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex items-center justify-between border-t border-black/10 pt-3">
+            <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-black/55">
+              {totalItems} {totalItems === 1 ? "item" : "items"}
+            </span>
+            <LocalizedClientLink
+              href="/cart"
+              onClick={close}
+              className="inline-flex h-9 items-center justify-center rounded-[10px] bg-[#111111] px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white"
+              data-testid="mobile-go-to-cart-button"
+            >
+              View bag
+            </LocalizedClientLink>
+          </div>
+        </div>
+      </Transition>
     </div>
   )
 }
