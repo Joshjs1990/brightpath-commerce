@@ -9,7 +9,6 @@ import { listCollections } from "@lib/data/collections"
 import { listCategories } from "@lib/data/categories"
 import { listProducts } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
-import { getCategoryImage } from "@lib/util/category-image"
 
 export const metadata: Metadata = {
   title: "Brightpath Fashion Store",
@@ -17,38 +16,29 @@ export const metadata: Metadata = {
     "A modern editorial fashion storefront built with Next.js and Medusa.",
 }
 
-const fallbackCategoryTiles = [
-  {
-    title: "Outerwear",
-    label: "Transitional layers",
-    href: "/store",
-    image:
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    title: "Tailoring",
-    label: "Sharp daily pieces",
-    href: "/store",
-    image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    title: "Accessories",
-    label: "Considered finishing",
-    href: "/store",
-    image:
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80",
-  },
-]
-
 const campaignImages = [
   "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?auto=format&fit=crop&w=900&q=80",
 ]
 
-const hasProducts = (category: Awaited<ReturnType<typeof listCategories>>[number]) => {
+const hasProducts = (
+  category: Awaited<ReturnType<typeof listCategories>>[number]
+) => {
   return (category.products?.length ?? 0) > 0
+}
+
+const getCategoryMetadataImage = (
+  category: Awaited<ReturnType<typeof listCategories>>[number]
+) => {
+  const metadata = category.metadata as Record<string, unknown> | null
+  const image =
+    metadata?.image_url ||
+    metadata?.image ||
+    metadata?.thumbnail ||
+    metadata?.hero_image
+
+  return typeof image === "string" && image.trim() ? image : undefined
 }
 
 export default async function Home(props: {
@@ -79,27 +69,33 @@ export default async function Home(props: {
     },
   })
 
+  const categoryTiles =
+    categories
+      ?.filter((category) => !category.parent_category && hasProducts(category))
+      .map((category) => ({
+        category,
+        image: getCategoryMetadataImage(category),
+      }))
+      .filter((item) => item.image)
+      .sort(
+        (a, b) =>
+          (b.category.products?.length ?? 0) - (a.category.products?.length ?? 0)
+      )
+      .slice(0, 3)
+      .map(({ category, image }) => ({
+        title: category.name,
+        label: "Shop",
+        href: `/categories/${category.handle}`,
+        image,
+      })) ?? []
+
   const categoriesWithProducts = categories?.filter(hasProducts) ?? []
   const homepageCategories = categoriesWithProducts.length
     ? categoriesWithProducts
     : categories ?? []
 
-  const categoryTiles =
-    homepageCategories
-      ?.filter((category) => !category.parent_category)
-      .slice(0, 3)
-      .map((category) => ({
-        title: category.name,
-        label:
-          typeof category.metadata?.label === "string"
-            ? category.metadata.label
-            : "Shop category",
-        href: `/categories/${category.handle}`,
-        image: getCategoryImage(category),
-      }))
-      .filter((category) => category.image) ?? fallbackCategoryTiles
   const categoryMarquee =
-    (categoriesWithProducts.length ? categoriesWithProducts : categories)
+    homepageCategories
       ?.slice(0, 6)
       .map((category) => category.name)
       .join(" / ") || "New In / Essentials / Sale / Outerwear / Accessories"
