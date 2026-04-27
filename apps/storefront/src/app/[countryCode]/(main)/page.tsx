@@ -103,7 +103,7 @@ export default async function Home(props: {
   return (
     <>
       <Hero />
-      <section className="border-b border-[#111111]/10 bg-white/82 backdrop-blur-sm">
+      <section className="border-b border-[#111111]/10 bg-white/[0.72] backdrop-blur-xl">
         <div className="content-container grid gap-8 py-16 small:grid-cols-[0.85fr_1.15fr] small:py-24">
           <div className="reveal-up">
             <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
@@ -167,7 +167,7 @@ export default async function Home(props: {
         ))}
       </section>
 
-      <section className="bg-white/86 backdrop-blur-sm">
+      <section className="bg-white/[0.72] backdrop-blur-xl">
         {latestProducts?.length > 0 && (
           <div className="content-container border-t border-[#111111]/10 py-12 small:py-24">
             <div className="mb-8 flex items-end justify-between gap-6">
@@ -186,7 +186,10 @@ export default async function Home(props: {
                 View all
               </LocalizedClientLink>
             </div>
-            <CarouselRail className="-mx-6 px-6 small:mx-0 small:px-0">
+            <CarouselRail
+              className="-mx-6 px-6 small:mx-0 small:px-0"
+              trackClassName="pt-5 pb-10"
+            >
               {latestProducts.map((product) => (
                 <div
                   key={product.id}
@@ -209,7 +212,7 @@ export default async function Home(props: {
         )}
       </section>
 
-      <section className="bg-white/86 py-10 backdrop-blur-sm small:py-20">
+      <section className="bg-white/[0.72] py-10 backdrop-blur-xl small:py-20">
         <div className="content-container grid gap-4 small:grid-cols-[0.8fr_1.2fr]">
           <div className="premium-panel flex flex-col justify-between gap-10 rounded-[18px] p-6 text-[#111111] small:p-10">
             <div>

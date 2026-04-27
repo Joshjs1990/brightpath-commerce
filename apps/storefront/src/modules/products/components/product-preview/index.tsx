@@ -30,42 +30,42 @@ export default async function ProductPreview({
   return (
     <LocalizedClientLink
       href={`/products/${product.handle}`}
-      className="group block"
+      className="group block h-full"
     >
       <div
         data-testid="product-wrapper"
-        className="premium-panel flex flex-col overflow-hidden rounded-[16px] transition-all duration-500 hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_28px_80px_rgba(0,0,0,0.12)]"
+        className="premium-product-card flex h-full flex-col overflow-hidden rounded-[18px] transition-all duration-500 ease-out hover:-translate-y-2"
       >
-        <div className="relative aspect-square overflow-hidden bg-[#f4f2ee]">
+        <div className="relative aspect-square overflow-hidden bg-[#f2f1ee]/80">
           <Thumbnail
             thumbnail={product.thumbnail}
             images={product.images}
             size="full"
             isFeatured={isFeatured}
             fit="cover"
-            className="!aspect-square bg-transparent"
+            className="!aspect-square bg-transparent transition-transform duration-700 group-hover:scale-[1.035]"
           />
           {isFeatured && (
-            <div className="absolute top-3 left-3 bg-gray-900/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-[0.12em]">
+            <div className="absolute left-3 top-3 rounded-[9px] border border-white/20 bg-black/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-[0_10px_28px_rgba(0,0,0,0.18)] backdrop-blur-xl">
               Featured
             </div>
           )}
         </div>
-        <div className="p-4 flex flex-col gap-2">
+        <div className="flex flex-1 flex-col gap-2 p-4">
           <div>
             <Text
-              className="font-bold text-gray-900 text-sm leading-5 line-clamp-2"
+              className="line-clamp-2 text-sm font-semibold leading-5 text-[#111111]"
               data-testid="product-title"
             >
               {product.title}
             </Text>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-gray-500 font-semibold">
+            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6d6860]">
               New season
             </p>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="mt-auto flex items-center justify-between border-t border-black/10 pt-3">
             {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
-            <div className="text-xs text-gray-400 group-hover:text-gray-600 transition-colors">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full border border-black/10 bg-white/55 text-xs text-[#76716b] transition-all duration-300 group-hover:border-black/20 group-hover:bg-black group-hover:text-white">
               →
             </div>
           </div>
