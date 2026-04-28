@@ -418,18 +418,28 @@ const CartDropdown = ({
                 </div>
               )}
             </div>
-            <div className="flex items-center justify-between gap-3 border-t border-black/10 pt-3">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-black/55">
+            <div className="grid grid-cols-2 gap-2 border-t border-black/10 pt-3">
+              <span className="col-span-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-black/55">
                 {totalItems} {totalItems === 1 ? "item" : "items"}
               </span>
-              <button
-                type="button"
-                onClick={closeToast}
-                className="inline-flex h-9 items-center justify-center rounded-[10px] bg-[#111111] px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white"
-                data-testid="mobile-cart-toast-close"
-              >
-                Keep shopping
-              </button>
+              <div className="col-span-2 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={closeToast}
+                  className="inline-flex h-10 items-center justify-center rounded-[10px] border border-black/10 bg-white/70 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-black"
+                  data-testid="mobile-cart-toast-close"
+                >
+                  Continue
+                </button>
+                <LocalizedClientLink
+                  href="/cart"
+                  onClick={closeToast}
+                  className="inline-flex h-10 items-center justify-center rounded-[10px] bg-[#111111] px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-white"
+                  data-testid="mobile-cart-toast-view-cart"
+                >
+                  View cart
+                </LocalizedClientLink>
+              </div>
             </div>
           </div>
         </Transition>

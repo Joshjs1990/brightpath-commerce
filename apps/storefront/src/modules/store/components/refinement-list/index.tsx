@@ -1,7 +1,16 @@
 "use client"
 
+import { Portal, Transition } from "@headlessui/react"
+import { XMark } from "@medusajs/icons"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useCallback, useMemo } from "react"
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react"
 
 import SortProducts, { SortOptions } from "./sort-products"
 
@@ -35,20 +44,32 @@ const RefinementList = ({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const maxPrice = priceMax || String(PRICE_LIMIT)
-  const sliderPrice = Number.isFinite(Number(maxPrice))
-    ? Number(maxPrice)
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const [localPriceMin, setLocalPriceMin] = useState(priceMin || "")
+  const [localPriceMax, setLocalPriceMax] = useState(
+    priceMax || String(PRICE_LIMIT)
+  )
+  const sliderPrice = Number.isFinite(Number(localPriceMax))
+    ? Number(localPriceMax)
     : PRICE_LIMIT
 
+  useEffect(() => {
+    setLocalPriceMin(priceMin || "")
+    setLocalPriceMax(priceMax || String(PRICE_LIMIT))
+  }, [priceMin, priceMax])
+
   const createQueryString = useCallback(
-    (name: string, value?: string) => {
+    (updates: Record<string, string | undefined>) => {
       const params = new URLSearchParams(searchParams)
 
-      if (value) {
-        params.set(name, value)
-      } else {
-        params.delete(name)
-      }
+      Object.entries(updates).forEach(([name, value]) => {
+        if (value) {
+          params.set(name, value)
+        } else {
+          params.delete(name)
+        }
+      })
 
       params.delete("page")
 
@@ -58,8 +79,25 @@ const RefinementList = ({
   )
 
   const setQueryParams = (name: string, value?: string) => {
-    const query = createQueryString(name, value)
-    router.push(query ? `${pathname}?${query}` : pathname)
+    const query = createQueryString({ [name]: value })
+    startTransition(() => {
+      router.replace(query ? `${pathname}?${query}` : pathname, {
+        scroll: false,
+      })
+    })
+  }
+
+  const applyPriceFilters = () => {
+    const query = createQueryString({
+      priceMin: localPriceMin || undefined,
+      priceMax: localPriceMax || undefined,
+    })
+
+    startTransition(() => {
+      router.replace(query ? `${pathname}?${query}` : pathname, {
+        scroll: false,
+      })
+    })
   }
 
   const clearFilters = () => {
@@ -71,14 +109,20 @@ const RefinementList = ({
     params.delete("page")
 
     const query = params.toString()
-    router.push(query ? `${pathname}?${query}` : pathname)
+    setLocalPriceMin("")
+    setLocalPriceMax(String(PRICE_LIMIT))
+    startTransition(() => {
+      router.replace(query ? `${pathname}?${query}` : pathname, {
+        scroll: false,
+      })
+    })
   }
 
   const hasFilters = !!selectedCategory || !!priceMin || !!priceMax
   const categoryRows = useMemo(() => categories.slice(0, 8), [categories])
 
-  return (
-    <aside className="copy-panel mb-6 flex w-full flex-col gap-6 p-4 small:mb-0 small:w-[280px] small:shrink-0 small:p-5">
+  const filterContent = (
+    <>
       <div className="flex items-start justify-between gap-4 border-b border-black/10 pb-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#77736d]">
@@ -88,11 +132,19 @@ const RefinementList = ({
             Refine edit
           </h2>
         </div>
+        <button
+          type="button"
+          onClick={() => setFilterOpen(false)}
+          className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-black/10 bg-white/70 small:hidden"
+          aria-label="Close filters"
+        >
+          <XMark />
+        </button>
         {hasFilters && (
           <button
             type="button"
             onClick={clearFilters}
-            className="rounded-[9px] border border-black/10 bg-white/70 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55 transition-colors hover:bg-black hover:text-white"
+            className="hidden rounded-[9px] border border-black/10 bg-white/70 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-black/55 transition-colors hover:bg-black hover:text-white small:block"
           >
             Clear
           </button>
@@ -111,7 +163,7 @@ const RefinementList = ({
             Price
           </p>
           <span className="text-[12px] font-semibold text-black/60">
-            0 - {maxPrice}
+            0 - {localPriceMax || PRICE_LIMIT}
           </span>
         </div>
         <input
@@ -120,7 +172,9 @@ const RefinementList = ({
           max={PRICE_LIMIT}
           step="10"
           value={sliderPrice}
-          onChange={(event) => setQueryParams("priceMax", event.target.value)}
+          onChange={(event) => setLocalPriceMax(event.target.value)}
+          onPointerUp={applyPriceFilters}
+          onTouchEnd={applyPriceFilters}
           className="h-1.5 w-full accent-black"
           aria-label="Maximum price"
         />
@@ -130,10 +184,9 @@ const RefinementList = ({
             <input
               type="number"
               min="0"
-              value={priceMin || ""}
-              onChange={(event) =>
-                setQueryParams("priceMin", event.target.value)
-              }
+              value={localPriceMin}
+              onChange={(event) => setLocalPriceMin(event.target.value)}
+              onBlur={applyPriceFilters}
               placeholder="0"
               className="h-10 rounded-[10px] border border-black/10 bg-white/70 px-3 text-[13px] font-semibold text-black outline-none transition-colors focus:border-black/30"
             />
@@ -143,15 +196,22 @@ const RefinementList = ({
             <input
               type="number"
               min="0"
-              value={priceMax || ""}
-              onChange={(event) =>
-                setQueryParams("priceMax", event.target.value)
-              }
+              value={priceMax ? localPriceMax : ""}
+              onChange={(event) => setLocalPriceMax(event.target.value)}
+              onBlur={applyPriceFilters}
               placeholder={String(PRICE_LIMIT)}
               className="h-10 rounded-[10px] border border-black/10 bg-white/70 px-3 text-[13px] font-semibold text-black outline-none transition-colors focus:border-black/30"
             />
           </label>
         </div>
+        <button
+          type="button"
+          onClick={applyPriceFilters}
+          className="h-10 rounded-[11px] bg-black px-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-white disabled:opacity-50"
+          disabled={isPending}
+        >
+          Apply price
+        </button>
       </div>
 
       {categoryRows.length > 0 && (
@@ -191,7 +251,57 @@ const RefinementList = ({
           </div>
         </div>
       )}
-    </aside>
+      {hasFilters && (
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="h-10 rounded-[11px] border border-black/10 bg-white/70 px-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-black/55 transition-colors hover:bg-black hover:text-white small:hidden"
+        >
+          Clear filters
+        </button>
+      )}
+    </>
+  )
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setFilterOpen(true)}
+        className="copy-panel mb-5 flex h-12 w-full items-center justify-between px-4 text-left small:hidden"
+      >
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#77736d]">
+          Filter and sort
+        </span>
+        <span className="rounded-full bg-black px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
+          Open
+        </span>
+      </button>
+      <Portal>
+        <Transition
+          show={filterOpen}
+          as={Fragment}
+          enter="transition-opacity ease-out duration-200"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 z-[90] bg-white/50 backdrop-blur-sm small:hidden">
+            <div
+              className="absolute inset-3 top-[76px] overflow-y-auto rounded-[18px] border border-black/10 bg-white/[0.98] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.16)]"
+              data-testid="mobile-filter-panel"
+            >
+              <div className="flex flex-col gap-6">{filterContent}</div>
+            </div>
+          </div>
+        </Transition>
+      </Portal>
+      <aside className="copy-panel hidden w-full flex-col gap-6 p-4 small:mb-0 small:flex small:w-[280px] small:shrink-0 small:p-5">
+        {filterContent}
+      </aside>
+    </>
   )
 }
 

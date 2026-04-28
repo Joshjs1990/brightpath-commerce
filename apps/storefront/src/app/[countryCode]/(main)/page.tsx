@@ -255,20 +255,16 @@ export default async function Home(props: {
               View Edit
             </LocalizedClientLink>
           </div>
-          <CarouselRail
-            className="-mx-6 px-6 small:mx-0 small:px-0"
-            trackClassName="small:grid small:min-h-[560px] small:grid-cols-3 small:overflow-visible small:pb-0"
-            controlsClassName="small:hidden"
-          >
+          <div className="grid gap-4 small:min-h-[560px] small:grid-cols-3">
             {campaignImages.map((item, index) => (
               <img
                 key={`${item.image}-${index}`}
                 src={item.image}
                 alt={`${item.title} campaign`}
-                className="h-[360px] w-[78vw] flex-none snap-start rounded-[22px] border border-black/10 bg-[#f3f1ed] object-contain shadow-[0_24px_70px_rgba(0,0,0,0.12)] small:h-full small:min-h-[520px] small:w-full small:rounded-[28px] small:object-cover"
+                className="h-[360px] w-full rounded-[22px] border border-black/10 bg-[#f3f1ed] object-contain shadow-[0_24px_70px_rgba(0,0,0,0.12)] small:h-full small:min-h-[520px] small:rounded-[28px] small:object-cover"
               />
             ))}
-          </CarouselRail>
+          </div>
         </div>
       </section>
     </>
