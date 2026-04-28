@@ -4,8 +4,9 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import StoreTemplate from "@modules/store/templates"
 
 export const metadata: Metadata = {
-  title: "Store",
-  description: "Explore all of our products.",
+  title: "Shop All",
+  description:
+    "Shop Edges In Motion for premium fashion, sharp everyday layers, and future-facing statement pieces.",
 }
 
 type Params = {

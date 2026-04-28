@@ -1,5 +1,5 @@
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import BrightpathLogo from "@modules/common/icons/brightpath-logo"
+import EdgesInMotionLogo from "@modules/common/icons/edges-in-motion-logo"
 import ChevronDown from "@modules/common/icons/chevron-down"
 
 export default function CheckoutLayout({
@@ -29,8 +29,8 @@ export default function CheckoutLayout({
             className="flex h-10 items-center gap-2 rounded-[10px] border border-black/10 bg-white/70 px-3 text-[12px] font-black uppercase tracking-[0.16em] text-black shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-colors hover:bg-white"
             data-testid="store-link"
           >
-            <BrightpathLogo className="h-5 w-5" />
-            <span>Brightpath</span>
+            <EdgesInMotionLogo className="h-5 w-5" />
+            <span>Edges In Motion</span>
           </LocalizedClientLink>
           <div className="flex flex-1 basis-0 justify-end">
             <span className="hidden h-10 items-center rounded-[10px] border border-black/10 bg-white/55 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-black/55 backdrop-blur-xl small:inline-flex">
@@ -43,7 +43,7 @@ export default function CheckoutLayout({
         {children}
       </div>
       <div className="content-container flex flex-col gap-3 border-t border-black/10 py-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-black/45 small:flex-row small:items-center small:justify-between">
-        <span>Brightpath checkout</span>
+        <span>Edges In Motion checkout</span>
         <span>Private payment processing</span>
       </div>
     </div>

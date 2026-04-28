@@ -19,7 +19,7 @@ export default async function Footer() {
               href="/"
               className="text-xl font-bold uppercase tracking-[0.25em] text-gray-900 hover:opacity-70 transition-opacity"
             >
-              Brightpath
+              Edges In Motion
             </LocalizedClientLink>
             <p className="mt-8 text-2xl small:text-3xl font-bold leading-tight text-gray-900">
               Refined essentials for modern living.
@@ -145,7 +145,7 @@ export default async function Footer() {
         </div>
         <div className="flex w-full flex-col gap-4 border-t border-gray-200 py-8 text-gray-600 small:flex-row small:justify-between">
           <Text className="text-xs">
-            © {new Date().getFullYear()} Brightpath. All rights reserved.
+            © {new Date().getFullYear()} Edges In Motion. All rights reserved.
           </Text>
           <div className="flex gap-6 text-xs uppercase tracking-[0.12em] text-gray-600 hover:text-gray-900 transition-colors">
             <span className="cursor-pointer hover:text-gray-900">Instagram</span>

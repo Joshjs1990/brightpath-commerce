@@ -13,7 +13,12 @@ import { getRegion } from "@lib/data/regions"
 export const metadata: Metadata = {
   title: "Edges In Motion Fashion Store",
   description:
-    "A modern editorial fashion storefront built with Next.js and Medusa.",
+    "Premium fashion for sharp silhouettes, abstract textures, and modern pieces with a future-facing edge.",
+  openGraph: {
+    title: "Edges In Motion Fashion Store",
+    description:
+      "Premium fashion for sharp silhouettes, abstract textures, and modern pieces with a future-facing edge.",
+  },
 }
 
 const fallbackCampaignImages = [

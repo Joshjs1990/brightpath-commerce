@@ -5,7 +5,7 @@ const Hero = () => {
     <section className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-black">
       <div className="absolute inset-0">
         <img
-          src="/images/brightpath-edgy-hero.png"
+          src="/images/edges-in-motion-hero.png"
           alt="Abstract black and white fashion campaign"
           className="h-full w-full object-cover object-center"
         />
@@ -19,7 +19,7 @@ const Hero = () => {
               Abstract fashion system 01
             </p>
             <h1 className="max-w-[900px] text-[58px] font-semibold leading-[0.9] tracking-normal text-white small:text-[118px]">
-              Edges in motion
+              Edges In Motion
             </h1>
             <div className="mt-7 h-px w-24 bg-white/70" />
           </div>

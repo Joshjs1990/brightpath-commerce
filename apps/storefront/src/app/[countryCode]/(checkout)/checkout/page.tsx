@@ -7,7 +7,7 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 export const metadata: Metadata = {
-  title: "Checkout | Brightpath",
+  title: "Checkout | Edges In Motion",
 }
 
 export default async function Checkout() {

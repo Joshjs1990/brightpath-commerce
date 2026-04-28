@@ -6,7 +6,7 @@ import { listRegions } from "@lib/data/regions"
 import { listCategories } from "@lib/data/categories"
 import { StoreRegion } from "@medusajs/types"
 import { MagnifyingGlass, User, Heart } from "@medusajs/icons"
-import BrightpathLogo from "@modules/common/icons/brightpath-logo"
+import EdgesInMotionLogo from "@modules/common/icons/edges-in-motion-logo"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
@@ -69,8 +69,8 @@ export default async function Nav() {
               className="flex h-10 items-center gap-2 rounded-[10px] border border-black/10 bg-white/60 px-3 text-[11px] font-semibold uppercase leading-none tracking-[0.12em] shadow-[0_10px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-colors hover:bg-white/80"
               data-testid="nav-store-link"
             >
-              <BrightpathLogo className="h-5 w-5" />
-              <span>Brightpath</span>
+              <EdgesInMotionLogo className="h-5 w-5" />
+              <span>Edges In Motion</span>
             </LocalizedClientLink>
           </div>
 

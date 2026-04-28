@@ -5,7 +5,7 @@ import useToggleState from "@lib/hooks/use-toggle-state"
 import { ArrowRightMini, XMark } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import BrightpathLogo from "@modules/common/icons/brightpath-logo"
+import EdgesInMotionLogo from "@modules/common/icons/edges-in-motion-logo"
 import { Text, clx } from "@modules/common/components/ui"
 import { Fragment } from "react"
 import CountrySelect from "../country-select"
@@ -86,8 +86,8 @@ const SideMenu = ({
                         className="mb-12 flex items-center gap-3 text-[18px] font-semibold uppercase tracking-[0.22em]"
                         onClick={close}
                       >
-                        <BrightpathLogo className="h-7 w-7" />
-                        <span>Brightpath</span>
+                        <EdgesInMotionLogo className="h-7 w-7" />
+                        <span>Edges In Motion</span>
                       </LocalizedClientLink>
                       <ul className="flex flex-col gap-6 items-start justify-start">
                         {categoryLinks.map(({ label, href }) => {
@@ -155,7 +155,7 @@ const SideMenu = ({
                         />
                       </div>
                       <Text className="flex justify-between txt-compact-small text-black/55">
-                        © {new Date().getFullYear()} Brightpath. All rights
+                        © {new Date().getFullYear()} Edges In Motion. All rights
                         reserved.
                       </Text>
                     </div>
