@@ -27,9 +27,17 @@ const Summary = ({ cart }: SummaryProps) => {
 
   return (
     <div className="flex flex-col gap-y-4">
-      <Heading level="h2" className="text-[2rem] leading-[2.75rem]">
-        Summary
-      </Heading>
+      <div className="border-b border-black/10 pb-4">
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#77736d]">
+          Checkout
+        </p>
+        <Heading
+          level="h2"
+          className="text-[28px] font-medium leading-none tracking-normal text-[#111111]"
+        >
+          Summary
+        </Heading>
+      </div>
       <DiscountCode cart={cart} />
       <Divider />
       <CartTotals totals={cart} />

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "A modern editorial fashion storefront built with Next.js and Medusa.",
 }
 
-const campaignImages = [
+const fallbackCampaignImages = [
   "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?auto=format&fit=crop&w=900&q=80",
@@ -88,6 +88,26 @@ export default async function Home(props: {
         href: `/categories/${category.handle}`,
         image,
       })) ?? []
+
+  const metadataCampaignImages =
+    categories
+      ?.filter((category) => hasProducts(category))
+      .map((category) => ({
+        image: getCategoryMetadataImage(category),
+        title: category.name,
+      }))
+      .filter(
+        (item): item is { image: string; title: string } => !!item.image
+      )
+      .slice(0, 3) ?? []
+
+  const campaignImages = [
+    ...metadataCampaignImages,
+    ...fallbackCampaignImages.map((image, index) => ({
+      image,
+      title: `Campaign look ${index + 1}`,
+    })),
+  ].slice(0, 3)
 
   const categoriesWithProducts = categories?.filter(hasProducts) ?? []
   const homepageCategories = categoriesWithProducts.length
@@ -167,9 +187,9 @@ export default async function Home(props: {
         ))}
       </section>
 
-      <section className="bg-white/[0.72] backdrop-blur-xl">
+      <section className="py-10 small:py-20">
         {latestProducts?.length > 0 && (
-          <div className="content-container border-t border-[#111111]/10 py-12 small:py-24">
+          <div className="content-container">
             <div className="mb-8 flex items-end justify-between gap-6">
               <div>
                 <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#77736d]">
@@ -188,7 +208,8 @@ export default async function Home(props: {
             </div>
             <CarouselRail
               className="-mx-6 px-6 small:mx-0 small:px-0"
-              trackClassName="pt-5 pb-10"
+              trackClassName="pt-4 pb-7"
+              controlsClassName="mt-1"
             >
               {latestProducts.map((product) => (
                 <div
@@ -212,7 +233,7 @@ export default async function Home(props: {
         )}
       </section>
 
-      <section className="bg-white/[0.72] py-10 backdrop-blur-xl small:py-20">
+      <section className="py-10 small:py-20">
         <div className="content-container grid gap-4 small:grid-cols-[0.8fr_1.2fr]">
           <div className="premium-panel flex flex-col justify-between gap-10 rounded-[18px] p-6 text-[#111111] small:p-10">
             <div>
@@ -239,11 +260,11 @@ export default async function Home(props: {
             trackClassName="small:grid small:min-h-[560px] small:grid-cols-3 small:overflow-visible small:pb-0"
             controlsClassName="small:hidden"
           >
-            {campaignImages.map((image, index) => (
+            {campaignImages.map((item, index) => (
               <img
-                key={image}
-                src={image}
-                alt={`Campaign look ${index + 1}`}
+                key={`${item.image}-${index}`}
+                src={item.image}
+                alt={`${item.title} campaign`}
                 className="h-[360px] w-[78vw] flex-none snap-start rounded-[22px] border border-black/10 bg-[#f3f1ed] object-contain shadow-[0_24px_70px_rgba(0,0,0,0.12)] small:h-full small:min-h-[520px] small:w-full small:rounded-[28px] small:object-cover"
               />
             ))}

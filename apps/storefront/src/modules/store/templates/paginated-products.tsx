@@ -6,6 +6,16 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 
 const PRODUCT_LIMIT = 12
 
+const parsePriceFilter = (value?: string) => {
+  if (!value) {
+    return undefined
+  }
+
+  const price = Number(value)
+
+  return Number.isFinite(price) ? price * 100 : undefined
+}
+
 type PaginatedProductsParams = {
   limit: number
   collection_id?: string[]
@@ -21,6 +31,8 @@ export default async function PaginatedProducts({
   categoryId,
   productsIds,
   countryCode,
+  priceMin,
+  priceMax,
 }: {
   sortBy?: SortOptions
   page: number
@@ -28,6 +40,8 @@ export default async function PaginatedProducts({
   categoryId?: string
   productsIds?: string[]
   countryCode: string
+  priceMin?: string
+  priceMax?: string
 }) {
   const queryParams: PaginatedProductsParams = {
     limit: 12,
@@ -50,6 +64,8 @@ export default async function PaginatedProducts({
   }
 
   const region = await getRegion(countryCode)
+  const normalizedPriceMin = parsePriceFilter(priceMin)
+  const normalizedPriceMax = parsePriceFilter(priceMax)
 
   if (!region) {
     return null
@@ -62,6 +78,8 @@ export default async function PaginatedProducts({
     queryParams,
     sortBy,
     countryCode,
+    priceMin: normalizedPriceMin,
+    priceMax: normalizedPriceMax,
   })
 
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)
@@ -69,7 +87,7 @@ export default async function PaginatedProducts({
   return (
     <>
       <ul
-        className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-4 small:gap-6 medium:gap-8"
+        className="grid w-full grid-cols-2 gap-4 small:grid-cols-3 small:gap-6 medium:grid-cols-4 medium:gap-8"
         data-testid="products-list"
       >
         {products.map((p) => {

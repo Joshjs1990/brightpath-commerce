@@ -34,7 +34,7 @@ export default async function ProductPreview({
     >
       <div
         data-testid="product-wrapper"
-        className="premium-product-card flex h-full flex-col overflow-hidden rounded-[18px] transition-all duration-500 ease-out hover:-translate-y-2"
+        className="premium-product-card flex h-full flex-col overflow-hidden rounded-[18px] transition-all duration-500 ease-out hover:-translate-y-1"
       >
         <div className="relative aspect-square overflow-hidden bg-[#f2f1ee]/80">
           <Thumbnail

@@ -1,12 +1,10 @@
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
-import InteractiveLink from "@modules/common/components/interactive-link"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 import { getCategoryImage } from "@lib/util/category-image"
 
@@ -14,11 +12,17 @@ export default function CategoryTemplate({
   category,
   sortBy,
   page,
+  selectedFilterCategory,
+  priceMin,
+  priceMax,
   countryCode,
 }: {
   category: HttpTypes.StoreProductCategory
   sortBy?: SortOptions
   page?: string
+  selectedFilterCategory?: string
+  priceMin?: string
+  priceMax?: string
   countryCode: string
 }) {
   const pageNumber = page ? parseInt(page) : 1
@@ -26,17 +30,19 @@ export default function CategoryTemplate({
 
   if (!category || !countryCode) notFound()
 
-  const parents = [] as HttpTypes.StoreProductCategory[]
-
-  const getParents = (category: HttpTypes.StoreProductCategory) => {
-    if (category.parent_category) {
-      parents.push(category.parent_category)
-      getParents(category.parent_category)
-    }
-  }
-
-  getParents(category)
   const categoryImage = getCategoryImage(category)
+  const filterCategories =
+    category.category_children
+      ?.filter((item) => (item.products?.length ?? 0) > 0)
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        handle: item.handle,
+        productCount: item.products?.length ?? 0,
+      })) ?? []
+  const selectedCategory = category.category_children?.find(
+    (item) => item.handle === selectedFilterCategory
+  )
 
   return (
     <div
@@ -64,61 +70,20 @@ export default function CategoryTemplate({
           </div>
         </div>
       )}
-      <div className="flex flex-col small:flex-row small:items-start">
-        <RefinementList sortBy={sort} data-testid="sort-by-container" />
+      <div className="flex flex-col gap-6 small:flex-row small:items-start">
+        <RefinementList
+          sortBy={sort}
+          categories={filterCategories}
+          selectedCategory={selectedFilterCategory}
+          priceMin={priceMin}
+          priceMax={priceMax}
+          data-testid="sort-by-container"
+        />
         <div className="w-full">
-        <div className="flex flex-row mb-8 text-2xl-semi gap-4">
-          {parents &&
-            parents.map((parent) => (
-              <span key={parent.id} className="text-ui-fg-subtle">
-                <LocalizedClientLink
-                  className="mr-4 hover:text-black"
-                  href={`/categories/${parent.handle}`}
-                  data-testid="sort-by-link"
-                >
-                  {parent.name}
-                </LocalizedClientLink>
-                /
-              </span>
-            ))}
-          {!categoryImage && (
-            <h1 data-testid="category-page-title">{category.name}</h1>
-          )}
-        </div>
-        {category.description && (
-          <div className="mb-8 text-base-regular">
-            <p>{category.description}</p>
-          </div>
-        )}
-        {category.category_children && (
-          <div className="mb-8 text-base-large">
-            <ul className="grid grid-cols-1 gap-3 small:grid-cols-3">
-              {category.category_children?.map((c) => (
-                <li key={c.id}>
-                  {getCategoryImage(c) ? (
-                    <LocalizedClientLink
-                      href={`/categories/${c.handle}`}
-                      className="group relative block h-[180px] overflow-hidden rounded-[12px] bg-[#f3f1ed]"
-                    >
-                      <img
-                        src={getCategoryImage(c)}
-                        alt={`${c.name} category`}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
-                      <span className="absolute bottom-4 left-4 text-[18px] font-medium text-white">
-                        {c.name}
-                      </span>
-                    </LocalizedClientLink>
-                  ) : (
-                    <InteractiveLink href={`/categories/${c.handle}`}>
-                      {c.name}
-                    </InteractiveLink>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {!categoryImage && (
+          <h1 className="sr-only" data-testid="category-page-title">
+            {category.name}
+          </h1>
         )}
         <Suspense
           fallback={
@@ -130,7 +95,9 @@ export default function CategoryTemplate({
           <PaginatedProducts
             sortBy={sort}
             page={pageNumber}
-            categoryId={category.id}
+            categoryId={selectedCategory?.id ?? category.id}
+            priceMin={priceMin}
+            priceMax={priceMax}
             countryCode={countryCode}
           />
         </Suspense>

@@ -34,7 +34,8 @@ export default async function Nav() {
         href: `/categories/${category.handle}`,
       })) ?? []
 
-  const mainLinks = categoryLinks.length > 0 ? categoryLinks : fallbackLinks
+  const mainLinks =
+    categoryLinks.length > 0 ? [...fallbackLinks, ...categoryLinks] : fallbackLinks
 
   return (
     <div className="sticky inset-x-0 top-0 z-50 border-b border-black/10 bg-white/[0.78] shadow-[0_1px_0_rgba(255,255,255,0.5)_inset] backdrop-blur-2xl">

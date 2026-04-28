@@ -7,6 +7,15 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import { getAuthHeaders, getCacheOptions } from "./cookies"
 import { getRegion, retrieveRegion } from "./regions"
 
+const getMinimumProductPrice = (product: HttpTypes.StoreProduct) => {
+  const prices =
+    product.variants
+      ?.map((variant) => variant?.calculated_price?.calculated_amount)
+      .filter((price): price is number => typeof price === "number") ?? []
+
+  return prices.length ? Math.min(...prices) : null
+}
+
 export const listProducts = async ({
   pageParam = 1,
   queryParams,
@@ -94,11 +103,15 @@ export const listProductsWithSort = async ({
   queryParams,
   sortBy = "created_at",
   countryCode,
+  priceMin,
+  priceMax,
 }: {
   page?: number
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
   sortBy?: SortOptions
   countryCode: string
+  priceMin?: number
+  priceMax?: number
 }): Promise<{
   response: { products: HttpTypes.StoreProduct[]; count: number }
   nextPage: number | null
@@ -117,18 +130,35 @@ export const listProductsWithSort = async ({
     countryCode,
   })
 
-  const sortedProducts = sortProducts(products, sortBy)
+  const sortedProducts = sortProducts(products, sortBy).filter((product) => {
+    const minimumPrice = getMinimumProductPrice(product)
+
+    if (minimumPrice === null) {
+      return true
+    }
+
+    if (typeof priceMin === "number" && minimumPrice < priceMin) {
+      return false
+    }
+
+    if (typeof priceMax === "number" && minimumPrice > priceMax) {
+      return false
+    }
+
+    return true
+  })
 
   const pageParam = (page - 1) * limit
 
-  const nextPage = count > pageParam + limit ? pageParam + limit : null
+  const filteredCount = sortedProducts.length
+  const nextPage = filteredCount > pageParam + limit ? pageParam + limit : null
 
   const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
 
   return {
     response: {
       products: paginatedProducts,
-      count,
+      count: filteredCount,
     },
     nextPage,
     queryParams,

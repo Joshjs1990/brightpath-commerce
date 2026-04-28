@@ -4,6 +4,7 @@ import {
   Popover,
   PopoverButton,
   PopoverPanel,
+  Portal,
   Transition,
 } from "@headlessui/react"
 import { convertToLocale } from "@lib/util/money"
@@ -23,13 +24,16 @@ const CartDropdown = ({
 }: {
   cart?: HttpTypes.StoreCart | null
 }) => {
-  const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(
-    undefined,
-  )
+  const [activeTimer, setActiveTimer] = useState<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined)
   const [cartDropdownOpen, setCartDropdownOpen] = useState(false)
+  const [cartToastOpen, setCartToastOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
 
   const open = () => setCartDropdownOpen(true)
   const close = () => setCartDropdownOpen(false)
+  const closeToast = () => setCartToastOpen(false)
 
   const totalItems =
     cartState?.items?.reduce((acc, item) => {
@@ -45,9 +49,16 @@ const CartDropdown = ({
     : null
 
   const timedOpen = () => {
-    open()
+    if (isDesktop) {
+      open()
+    } else {
+      setCartToastOpen(true)
+    }
 
-    const timer = setTimeout(close, 5000)
+    const timer = setTimeout(() => {
+      close()
+      closeToast()
+    }, 5000)
 
     setActiveTimer(timer)
   }
@@ -60,6 +71,15 @@ const CartDropdown = ({
     open()
   }
 
+  const toggleCartPanel = () => {
+    if (activeTimer) {
+      clearTimeout(activeTimer)
+    }
+
+    closeToast()
+    setCartDropdownOpen((current) => !current)
+  }
+
   // Clean up the timer when the component unmounts
   useEffect(() => {
     return () => {
@@ -68,6 +88,18 @@ const CartDropdown = ({
       }
     }
   }, [activeTimer])
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 640px)")
+    const syncViewport = () => setIsDesktop(mediaQuery.matches)
+
+    syncViewport()
+    mediaQuery.addEventListener("change", syncViewport)
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncViewport)
+    }
+  }, [])
 
   const pathname = usePathname()
 
@@ -87,17 +119,127 @@ const CartDropdown = ({
       onMouseLeave={close}
     >
       <Popover className="relative h-full">
-        <PopoverButton className="h-full focus:outline-none">
-          <LocalizedClientLink
-            className="flex h-full items-center gap-1.5 hover:text-ui-fg-base"
-            href="/cart"
-            data-testid="nav-cart-link"
-          >
-            <ShoppingBag className="h-3.5 w-3.5" />
-            <span className="hidden small:inline">{`Cart (${totalItems})`}</span>
-            <span className="small:hidden">{totalItems}</span>
-          </LocalizedClientLink>
+        <PopoverButton
+          className="flex h-full items-center gap-1.5 focus:outline-none hover:text-ui-fg-base"
+          onClick={toggleCartPanel}
+          aria-label="Open cart"
+          data-testid="nav-cart-link"
+        >
+          <ShoppingBag className="h-3.5 w-3.5" />
+          <span className="hidden small:inline">{`Cart (${totalItems})`}</span>
+          <span className="small:hidden">{totalItems}</span>
         </PopoverButton>
+        <Portal>
+          <Transition
+            show={cartDropdownOpen}
+            as={Fragment}
+            enter="transition-opacity ease-out duration-200"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-in duration-150"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div
+              className="fixed left-3 right-3 top-[76px] z-[80] max-h-[70vh] overflow-hidden rounded-[18px] border border-black/10 bg-white/[0.96] text-[#111111] shadow-[0_18px_55px_rgba(0,0,0,0.14)] backdrop-blur-2xl small:hidden"
+              data-testid="mobile-cart-panel"
+            >
+              <div className="flex items-center justify-between border-b border-black/10 p-4">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50">
+                    Cart
+                  </p>
+                  <h3 className="text-[20px] font-semibold leading-tight">
+                    {totalItems} {totalItems === 1 ? "item" : "items"}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={close}
+                  className="h-9 rounded-[10px] border border-black/10 bg-white/70 px-3 text-[11px] font-semibold uppercase tracking-[0.12em]"
+                >
+                  Close
+                </button>
+              </div>
+              {cartState && cartState.items?.length ? (
+                <>
+                  <div className="max-h-[38vh] overflow-y-auto p-4">
+                    <div className="grid gap-4">
+                      {[...cartState.items]
+                        .sort((a, b) => {
+                          return (a.created_at ?? "") > (b.created_at ?? "")
+                            ? -1
+                            : 1
+                        })
+                        .map((item) => (
+                          <div
+                            className="grid grid-cols-[72px_1fr] gap-3"
+                            key={item.id}
+                          >
+                            <div className="h-[72px] overflow-hidden rounded-[12px] bg-[#f3f1ed]">
+                              <Thumbnail
+                                thumbnail={item.thumbnail}
+                                images={item.variant?.product?.images}
+                                size="square"
+                                className="!aspect-square"
+                              />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="truncate text-[14px] font-semibold leading-5">
+                                {item.title}
+                              </p>
+                              <div className="mt-1 text-[12px] leading-5 text-black/55">
+                                <LineItemOptions variant={item.variant} />
+                                <span>Quantity: {item.quantity}</span>
+                              </div>
+                              <div className="mt-2 text-[13px] font-semibold">
+                                <LineItemPrice
+                                  item={item}
+                                  style="tight"
+                                  currencyCode={cartState.currency_code}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                  <div className="border-t border-black/10 p-4">
+                    <div className="mb-4 flex items-center justify-between text-[13px]">
+                      <span className="font-semibold">Subtotal</span>
+                      <span className="font-semibold">
+                        {convertToLocale({
+                          amount: subtotal,
+                          currency_code: cartState.currency_code,
+                        })}
+                      </span>
+                    </div>
+                    <LocalizedClientLink
+                      href="/cart"
+                      onClick={close}
+                      className="flex h-11 w-full items-center justify-center rounded-[12px] bg-[#111111] text-[12px] font-semibold uppercase tracking-[0.14em] text-white"
+                    >
+                      View bag
+                    </LocalizedClientLink>
+                  </div>
+                </>
+              ) : (
+                <div className="p-6 text-center">
+                  <p className="text-[15px] font-semibold">
+                    Your bag is empty.
+                  </p>
+                  <LocalizedClientLink
+                    href="/store"
+                    onClick={close}
+                    className="mt-5 flex h-11 w-full items-center justify-center rounded-[12px] bg-[#111111] text-[12px] font-semibold uppercase tracking-[0.14em] text-white"
+                  >
+                    Explore products
+                  </LocalizedClientLink>
+                </div>
+              )}
+            </div>
+          </Transition>
+        </Portal>
         <Transition
           show={cartDropdownOpen}
           as={Fragment}
@@ -236,60 +378,62 @@ const CartDropdown = ({
           </PopoverPanel>
         </Transition>
       </Popover>
-      <Transition
-        show={cartDropdownOpen && !!latestItem}
-        as={Fragment}
-        enter="transition ease-out duration-200"
-        enterFrom="opacity-0 -translate-y-2"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition ease-in duration-150"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 -translate-y-2"
-      >
-        <div
-          className="fixed inset-x-3 top-[76px] z-[80] rounded-[16px] border border-black/10 bg-white/[0.985] p-4 text-[#111111] shadow-[0_24px_80px_rgba(0,0,0,0.16)] backdrop-blur-md small:hidden"
-          data-testid="mobile-cart-confirmation"
+      <Portal>
+        <Transition
+          show={cartToastOpen && !!latestItem}
+          as={Fragment}
+          enter="transition-opacity ease-out duration-200"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <div>
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50">
-                Added to cart
-              </p>
-              <h3 className="text-[18px] font-semibold leading-tight">
-                {latestItem?.title || "Item added"}
-              </h3>
-              {latestItem?.variant && (
-                <div className="mt-1 text-[12px] text-black/55">
-                  <LineItemOptions variant={latestItem.variant} />
+          <div
+            className="fixed bottom-4 left-3 right-3 z-[90] rounded-[18px] border border-black/10 bg-white/[0.97] p-4 text-[#111111] shadow-[0_18px_55px_rgba(0,0,0,0.14)] backdrop-blur-2xl small:hidden"
+            data-testid="mobile-cart-confirmation"
+          >
+            <div className="mb-4 grid grid-cols-[1fr_72px] gap-4">
+              <div className="min-w-0">
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-black/50">
+                  Added to cart
+                </p>
+                <h3 className="line-clamp-2 text-[18px] font-semibold leading-tight">
+                  {latestItem?.title || "Item added"}
+                </h3>
+                {latestItem?.variant && (
+                  <div className="mt-1 text-[12px] leading-5 text-black/55">
+                    <LineItemOptions variant={latestItem.variant} />
+                  </div>
+                )}
+              </div>
+              {latestItem && (
+                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-[10px] bg-[#f3f1ed]">
+                  <Thumbnail
+                    thumbnail={latestItem.thumbnail}
+                    images={latestItem.variant?.product?.images}
+                    size="square"
+                    className="!aspect-square"
+                  />
                 </div>
               )}
             </div>
-            {latestItem && (
-              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-[10px] bg-[#f3f1ed]">
-                <Thumbnail
-                  thumbnail={latestItem.thumbnail}
-                  images={latestItem.variant?.product?.images}
-                  size="square"
-                  className="!aspect-square"
-                />
-              </div>
-            )}
+            <div className="flex items-center justify-between gap-3 border-t border-black/10 pt-3">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-black/55">
+                {totalItems} {totalItems === 1 ? "item" : "items"}
+              </span>
+              <button
+                type="button"
+                onClick={closeToast}
+                className="inline-flex h-9 items-center justify-center rounded-[10px] bg-[#111111] px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white"
+                data-testid="mobile-cart-toast-close"
+              >
+                Keep shopping
+              </button>
+            </div>
           </div>
-          <div className="flex items-center justify-between border-t border-black/10 pt-3">
-            <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-black/55">
-              {totalItems} {totalItems === 1 ? "item" : "items"}
-            </span>
-            <LocalizedClientLink
-              href="/cart"
-              onClick={close}
-              className="inline-flex h-9 items-center justify-center rounded-[10px] bg-[#111111] px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white"
-              data-testid="mobile-go-to-cart-button"
-            >
-              View bag
-            </LocalizedClientLink>
-          </div>
-        </div>
-      </Transition>
+        </Transition>
+      </Portal>
     </div>
   )
 }

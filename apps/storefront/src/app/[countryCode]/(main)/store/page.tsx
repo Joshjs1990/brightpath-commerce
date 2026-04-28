@@ -12,6 +12,9 @@ type Params = {
   searchParams: Promise<{
     sortBy?: SortOptions
     page?: string
+    category?: string
+    priceMin?: string
+    priceMax?: string
   }>
   params: Promise<{
     countryCode: string
@@ -21,12 +24,15 @@ type Params = {
 export default async function StorePage(props: Params) {
   const params = await props.params;
   const searchParams = await props.searchParams;
-  const { sortBy, page } = searchParams
+  const { sortBy, page, category, priceMin, priceMax } = searchParams
 
   return (
     <StoreTemplate
       sortBy={sortBy}
       page={page}
+      category={category}
+      priceMin={priceMin}
+      priceMax={priceMax}
       countryCode={params.countryCode}
     />
   )
