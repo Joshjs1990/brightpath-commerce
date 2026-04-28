@@ -11,7 +11,7 @@ import { listProducts } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
 
 export const metadata: Metadata = {
-  title: "Brightpath Fashion Store",
+  title: "Edges In Motion Fashion Store",
   description:
     "A modern editorial fashion storefront built with Next.js and Medusa.",
 }
