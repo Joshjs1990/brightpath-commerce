@@ -43,6 +43,26 @@ export default function DemoNav() {
           <span className="text-[10px] sm:text-[11px]">Edges In Motion</span>
         </LocalizedClientLink>
         <div className="flex items-center gap-4">
+          <label className="hidden items-center gap-1 text-[10px] font-normal tracking-wide sm:flex">
+            Country
+            <select
+              aria-label="Demo country"
+              value={prefix}
+              onChange={(event) => {
+                const rest = countries.includes(country)
+                  ? pathname.split("/").slice(2).join("/")
+                  : ""
+                window.location.assign(`/${event.target.value}/${rest}`)
+              }}
+              className="bg-transparent uppercase"
+            >
+              {countries.map((code) => (
+                <option key={code} value={code}>
+                  {code.toUpperCase()}
+                </option>
+              ))}
+            </select>
+          </label>
           <LocalizedClientLink
             href="/account"
             className="hidden sm:block hover:opacity-60"
@@ -97,29 +117,6 @@ export default function DemoNav() {
           </LocalizedClientLink>
         </nav>
       )}
-      <div className="flex items-center justify-center gap-3 border-t border-black/5 bg-[#f3f1ed] px-4 py-1.5 text-[10px] tracking-wide text-[#6d6860]">
-        <span>Demo store · Explore the edit. Orders are disabled.</span>
-        <label className="hidden sm:flex items-center gap-1">
-          Country
-          <select
-            aria-label="Demo country"
-            value={prefix}
-            onChange={(event) => {
-              const rest = countries.includes(country)
-                ? pathname.split("/").slice(2).join("/")
-                : ""
-              window.location.assign(`/${event.target.value}/${rest}`)
-            }}
-            className="bg-transparent uppercase"
-          >
-            {countries.map((code) => (
-              <option key={code} value={code}>
-                {code.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
     </div>
   )
 }
