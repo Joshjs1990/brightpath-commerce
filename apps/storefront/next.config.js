@@ -1,73 +1,9 @@
-const checkEnvVariables = require("./check-env-variables")
-
-checkEnvVariables()
-
-/**
- * Medusa Cloud-related environment variables
- */
-const S3_HOSTNAME = process.env.MEDUSA_CLOUD_S3_HOSTNAME
-const S3_PATHNAME = process.env.MEDUSA_CLOUD_S3_PATHNAME
-const MEDUSA_BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
-
-let backendImagePattern = null
-
-if (MEDUSA_BACKEND_URL) {
-  try {
-    const backendUrl = new URL(MEDUSA_BACKEND_URL)
-
-    backendImagePattern = {
-      protocol: backendUrl.protocol.replace(":", ""),
-      hostname: backendUrl.hostname,
-      port: backendUrl.port,
-    }
-  } catch {
-    backendImagePattern = null
-  }
-}
-
-/**
- * @type {import('next').NextConfig}
- */
-const nextConfig = {
+/** @type {import('next').NextConfig} */
+module.exports = {
+  output: "export",
+  trailingSlash: true,
   reactStrictMode: true,
-  logging: {
-    fetches: {
-      fullUrl: true,
-    },
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  images: {
-    unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-      },
-      ...(backendImagePattern ? [backendImagePattern] : []),
-      {
-        protocol: "https",
-        hostname: "*.s3.*.amazonaws.com",
-      },
-      {
-        protocol: "https",
-        hostname: "*.s3.amazonaws.com",
-      },
-      ...(S3_HOSTNAME && S3_PATHNAME
-        ? [
-            {
-              protocol: "https",
-              hostname: S3_HOSTNAME,
-              pathname: S3_PATHNAME,
-            },
-          ]
-        : []),
-    ],
-  },
+  // Static hosting has no image optimisation server. All demo images are local.
+  images: { unoptimized: true },
+  eslint: { ignoreDuringBuilds: true },
 }
-
-module.exports = nextConfig

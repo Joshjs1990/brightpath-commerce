@@ -6,9 +6,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "npm -r dev",
-    "build": "npm -r build",
-    "start": "turbo start",
+    "dev": "npm run dev -w @dtc/storefront",
+    "build": "npm run build -w @dtc/storefront",
+    "start": "npm run start -w @dtc/storefront",
     "lint": "turbo lint",
     "test": "turbo test",
     "backend:seed": "turbo seed --filter=@dtc/backend",

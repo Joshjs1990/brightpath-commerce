@@ -3,14 +3,15 @@
   "version": "1.0.3",
   "private": true,
   "author": "Kasper Fabricius Kristensen <kasper@medusajs.com> & Victor Gerbrands <victor@medusajs.com> (https://www.medusajs.com)",
-  "description": "Next.js Starter to be used with Medusa V2",
+  "description": "Edges In Motion static demonstration storefront",
   "keywords": [
     "medusa-storefront"
   ],
   "scripts": {
     "dev": "next dev -p 8000",
     "build": "next build",
-    "start": "next start -p 8000",
+    "start": "node scripts/preview.mjs",
+    "typecheck": "tsc --noEmit",
     "lint": "next lint",
     "analyze": "ANALYZE=true next build"
   },

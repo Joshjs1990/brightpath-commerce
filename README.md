@@ -1,222 +1,62 @@
-<p align="center">
-  <a href="https://www.medusajs.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/59018053/229103275-b5e482bb-4601-46e6-8142-244f531cebdb.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    <img alt="Medusa logo" src="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    </picture>
-  </a>
-</p>
-<h1 align="center">
-  Medusa DTC Starter
-</h1>
+# Edges In Motion — static demo storefront
 
-<h4 align="center">
-  <a href="https://docs.medusajs.com">Documentation</a> |
-  <a href="https://www.medusajs.com">Website</a>
-</h4>
+The storefront is a fully static Next.js export for presentation purposes. It uses a bundled sample catalogue and local images, with no dependency on Railway, Medusa, a database or Stripe.
 
-<p align="center">
-  Building blocks for digital commerce
-</p>
-<p align="center">
-  <a href="https://github.com/medusajs/medusa/blob/develop/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Medusa is released under the MIT license." />
-  </a>
-  <a href="https://circleci.com/gh/medusajs/medusa">
-    <img src="https://circleci.com/gh/medusajs/medusa.svg?style=shield" alt="Current CircleCI build status." />
-  </a>
-  <a href="https://github.com/medusajs/medusa/blob/develop/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome!" />
-  </a>
-    <a href="https://www.producthunt.com/posts/medusa"><img src="https://img.shields.io/badge/Product%20Hunt-%231%20Product%20of%20the%20Day-%23DA552E" alt="Product Hunt"></a>
-  <a href="https://discord.gg/xpCwq3Kfn8">
-    <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
-  </a>
-  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
-    <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
-  </a>
-</p>
+The original visual style and campaign homepage are retained. Visitors can browse categories and collections, search and filter products, sort by price, select sizes, and add, update or remove items in a bag that is saved in their browser. Checkout displays a demo summary; it collects no personal details, creates no orders and takes no payments. Account, shipping, terms and privacy pages explain the demo behaviour.
 
-# Medusa DTC Starter
+## Run locally
 
-A production-ready monorepo starter for direct-to-consumer ecommerce stores powered by Medusa and Next.js. Includes a fully featured storefront with product browsing, cart, checkout, customer accounts, and order management.
+Requires Node.js 20 or newer and npm.
 
-## Features
+From the repository root:
 
-- All of [Medusa's commerce features](https://docs.medusajs.com/resources/commerce-modules)
-- Multi-region support with automatic country detection
-- Product catalog with variant selection
-- Cart with promotion codes
-- Multi-step checkout with shipping and payment
-- Customer accounts with order history and address management
-- Order transfer between accounts
-
-## Getting Started
-
-### Deploy with Medusa Cloud
-
-The fastest way to get started is deploying with [Medusa Cloud](https://cloud.medusajs.com):
-
-1. [Create a Medusa Cloud account](https://cloud.medusajs.com)
-2. Deploy this starter directly from your dashboard
-
-### Local Installation
-
-> **Prerequisites:
->
-> - [Node.js](https://nodejs.org/) v20+
-> - [PostgreSQL](https://www.postgresql.org/) v15+
-> - [pnpm](https://pnpm.io/) v10+
-
-1. Clone the repository and install dependencies:
-
-```bash
-git clone https://github.com/medusajs/dtc-starter.git
-cd dtc-starter
-pnpm install
+```sh
+npm ci --workspace=@dtc/storefront --include-workspace-root
+npm run dev
 ```
 
-2. Set up environment variables for the backend:
+Open http://localhost:8000. No environment file is required.
 
-```bash
-cp apps/backend/.env.template apps/backend/.env
+To build and preview the actual static files:
+
+```sh
+npm run build
+npm start
 ```
 
-3. Set the database URL in `apps/backend.env`:
+The export is written to `apps/storefront/out/`. `npm start` only serves those files locally; there is no commerce server. If port 8000 is already in use, run `PORT=8011 npm start`.
 
-```bash
-# Replace with actual database URL, make sure the database exists.
-DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
+```sh
+npm run typecheck -w @dtc/storefront
 ```
 
-4. Run migrations:
+## Deploy the demo to Vercel
 
-```bash
-cd apps/backend
-pnpm medusa db:migrate
-```
+Commit and push the changes, then redeploy the existing Vercel project.
 
-5. Add admin user:
+Recommended project configuration:
 
-```bash
-cd apps/backend
-pnpm medusa user -e admin@test.com -p supersecret
-```
+| Setting | Value |
+| --- | --- |
+| Root Directory | `apps/storefront` |
+| Framework Preset | Other |
+| Build Command | `npm run build` |
+| Output Directory | `out` |
 
-6. Start Medusa backend:
+`apps/storefront/vercel.json` supplies the static framework, build and output settings. A root `vercel.json` also supports projects whose Root Directory is the repository root; its output directory is `apps/storefront/out`.
 
-```bash
-cd apps/backend
-pnpm dev
-```
+Remove any old dashboard overrides that conflict with those settings. There is no start command on Vercel: it serves the exported files.
 
-7. Open the admin dashboard at `localhost:9000/app` and log in. Retrieve your publishable API key at Settings > Publishable API key.
+No backend variables are required. Existing `NEXT_PUBLIC_MEDUSA_BACKEND_URL`, `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`, `NEXT_PUBLIC_STRIPE_KEY`, and Medusa Cloud image variables are ignored by the demo. They can be removed from Vercel. Optionally set `NEXT_PUBLIC_BASE_URL` to your deployed storefront URL and `NEXT_PUBLIC_DEFAULT_REGION` to the desired two-letter country prefix (defaults to `dk`). Country prefixes must be lowercase two-letter codes.
 
-8. Set up environment variables for the storefront:
+The homepage is available at `/` and each supported country prefix, with existing paths such as `/dk/store/`, `/dk/cart/`, and `/dk/checkout/`. DK, GB, US, DE, SE, FR, ES and IT are included, together with a custom default country if configured. All demo prices use one illustrative EUR price list. Unknown products and paths return a 404.
 
-```bash
-cp apps/storefront/.env.template apps/storefront/.env.local
-```
+The same `out/` directory can be served by any static host supporting directory index files and a `404.html` error page. Next.js static export documentation: https://nextjs.org/docs/app/guides/static-exports
 
-9. Update `apps/storefront/.env.local` with your Medusa publishable API key:
+## Edit the demo catalogue
 
-```bash
-NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
-```
+Edit `apps/storefront/src/lib/demo/catalog.ts` to change products, prices, sizes, categories or collections. Images live in `apps/storefront/public/images/demo/`, with the existing hero in `public/images/edges-in-motion-hero.png`. Sample product photography is from Unsplash and is illustrative, not a recovered copy of the original backend catalogue.
 
-10.  Start storefront:
+Rebuild and redeploy after catalogue changes. Cart data stays on the visitor's device and is validated against the catalogue when loaded. Clearing site storage deletes the saved bag.
 
-```bash
-cd apps/storefront
-pnpm dev
-```
-
-The storefront runs on `http://localhost:8000`.
-
-You can slo run the following command from the root to start both backend and storefront:
-
-```bash
-pnpm dev
-```
-
-## Configuration
-
-The storefront is configured via environment variables in `apps/storefront/.env.local`:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Publishable API key from your Medusa backend | — |
-| `NEXT_PUBLIC_MEDUSA_BACKEND_URL` | URL of your Medusa backend | `http://localhost:9000` |
-| `NEXT_PUBLIC_DEFAULT_REGION` | Default region country code | `dk` |
-| `NEXT_PUBLIC_BASE_URL` | Base URL of the storefront | `http://localhost:8000` |
-| `NEXT_PUBLIC_STRIPE_KEY` | Stripe publishable key (optional) | — |
-
-## Railway + Vercel Deployment
-
-This repo is split into two deployable apps:
-
-- `apps/backend`: Medusa backend, deploy to Railway.
-- `apps/storefront`: Next.js storefront, deploy to Vercel.
-
-### Railway Backend
-
-Create a Railway service for `apps/backend` and set these variables:
-
-```bash
-DATABASE_URL=postgres://...
-JWT_SECRET=<long-random-secret>
-COOKIE_SECRET=<long-random-secret>
-MEDUSA_BACKEND_URL=https://<your-railway-backend-domain>
-STORE_CORS=https://<your-vercel-storefront-domain>
-AUTH_CORS=https://<your-vercel-storefront-domain>,https://<your-railway-backend-domain>
-ADMIN_CORS=https://<your-railway-backend-domain>
-STRIPE_API_KEY=sk_live_or_test_...
-```
-
-Use `STRIPE_API_KEY` only on the backend. If it is blank, the backend will still run, but Stripe is disabled.
-
-If Railway is pointed at the repository root, use these commands:
-
-```bash
-npm install
-npm run build -w @dtc/backend
-npm run start -w @dtc/backend
-```
-
-If Railway is pointed at `apps/backend`, use `npm install`, `npm run build`, and `npm run start`.
-
-### Vercel Storefront
-
-Create a Vercel project for `apps/storefront` and set these variables:
-
-```bash
-NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...
-NEXT_PUBLIC_MEDUSA_BACKEND_URL=https://<your-railway-backend-domain>
-NEXT_PUBLIC_BASE_URL=https://<your-vercel-storefront-domain>
-NEXT_PUBLIC_DEFAULT_REGION=dk
-NEXT_PUBLIC_STRIPE_KEY=pk_live_or_test_...
-```
-
-After Vercel gives you the final production domain, add it to `STORE_CORS` and `AUTH_CORS` in Railway, then redeploy the backend.
-
-If Vercel is pointed at the repository root, set the project root directory to `apps/storefront`, or use:
-
-```bash
-npm install
-npm run build -w @dtc/storefront
-```
-
-### Stripe
-
-Stripe requires both keys:
-
-- Railway/backend: `STRIPE_API_KEY=sk_...`
-- Vercel/storefront: `NEXT_PUBLIC_STRIPE_KEY=pk_...`
-
-Use test keys for test mode and live keys for production mode. Do not put the `sk_...` key in Vercel or any client-side environment.
-
-## Resources
-
-- [Medusa Documentation](https://docs.medusajs.com)
-- [Medusa Cloud](https://cloud.medusajs.com)
+The previous Medusa backend and unused commerce modules remain in the repository as source references. They are not imported by the demo pages, built by the root build command, or deployed with the static storefront. The original account, order and payment routes have been replaced by the demo route tree; restoring real commerce would require reconnecting those routes to a working backend.

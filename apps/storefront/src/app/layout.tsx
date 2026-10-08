@@ -1,6 +1,9 @@
 import { getBaseURL } from "@lib/util/env"
 import { Metadata } from "next"
 import "styles/globals.css"
+import { DemoCartProvider } from "@modules/demo/cart-context"
+import DemoNav from "@modules/demo/nav"
+import DemoFooter from "@modules/demo/footer"
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
@@ -29,7 +32,11 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" data-mode="light">
       <body className="premium-grid bg-white text-[#111111] antialiased">
-        <main className="relative">{props.children}</main>
+        <DemoCartProvider>
+          <DemoNav />
+          <main className="relative">{props.children}</main>
+          <DemoFooter />
+        </DemoCartProvider>
       </body>
     </html>
   )

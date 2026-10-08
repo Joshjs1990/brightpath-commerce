@@ -32,7 +32,7 @@ const Hero = () => {
                 Shop Now
               </LocalizedClientLink>
               <LocalizedClientLink
-                href="/store"
+                href="/collections/new-in"
                 className="inline-flex h-11 items-center justify-center rounded-[10px] border border-white/45 px-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-white/10"
               >
                 New In
